@@ -13,8 +13,8 @@ export async function jsonAd({ referrer } = {}) {
   if (referrer) {
     jsonData = {
       ...jsonData,
-      image: `${config.url}/ad/${ad._id}/image?ref=${referrer}`,
-      url: `${config.url}/ad/${ad._id}/redirect?ref=${referrer}`
+      image: `${jsonData.image}?ref=${referrer}`,
+      url: `${jsonData.url}?ref=${referrer}`
     };
   }
   return jsonData;

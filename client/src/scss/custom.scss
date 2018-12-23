@@ -55,3 +55,15 @@ pre {
     grid-template-columns: 50% 50%;
   }
 }
+
+.header-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.header-logo {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}
