@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import url from 'url';
 import path from 'path';
 import db, { connect, getAd, click, impression, initCounter } from './db';
-import ad from './ad';
+import ad, { jsonAd } from './ad';
 import fetchRecords from './records';
 
 const app = express();
@@ -18,14 +18,32 @@ app.use(express.urlencoded());
 // get random ad page
 app.get('/ad', async (req, res) => {
   const referrer = req.header('Referer');
-  const referrerUrl = url.parse(referrer);
-  const a = await ad({ referrer: referrerUrl.host });
+  let a;
+  if (referrer) {
+    const referrerUrl = url.parse(referrer);
+    a = await ad({ referrer: referrerUrl.host });
+  } else {
+    a = await ad();
+  }
+  res.send(a);
+});
+
+app.get('/ad.json', async (req, res) => {
+  const referrer = req.header('Referer');
+  let a;
+  if (referrer) {
+    const referrerUrl = url.parse(referrer);
+    a = await jsonAd({ referrer: referrerUrl.host });
+  } else {
+    a = await jsonAd();
+  }
+  console.log(a);
   res.send(a);
 });
 
 app.get('/ad/:id/redirect', async (req, res) => {
   const adId = req.params.id;
-  const { referrer } = req.query;
+  const { ref: referrer } = req.query;
   try {
     const { url } = await getAd(adId);
     // log a click

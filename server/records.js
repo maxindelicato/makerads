@@ -7,13 +7,13 @@ const base = new Airtable({ apiKey: 'keymWk6x3qe1QpDJn' }).base(
   'app25MxfBcl3Kzssu'
 );
 
-async function sync({ reset }) {
+async function sync({ reset } = {}) {
   const ids = await getRecords({ reset });
   if (!reset) {
     await updateRecords(ids);
   }
 }
-async function getRecords({ reset = false }) {
+async function getRecords({ reset = false } = {}) {
   return new Promise((resolve, reject) => {
     let recordIds = [];
     base('Table 1')
@@ -106,6 +106,6 @@ const fetchImage = async uri => {
   });
 };
 
-export default async function fetchRecords({ reset }) {
+export default async function fetchRecords({ reset } = {}) {
   sync({ reset });
 }

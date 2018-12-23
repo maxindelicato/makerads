@@ -61,7 +61,7 @@ export async function getAd(id, { referrer } = {}) {
 let queue = [];
 let fetching = false;
 let fetchingPromise;
-async function getRandom({ referrer } = {}) {
+export async function getRandom({ referrer } = {}) {
   if (fetching) {
     await fetchingPromise;
     return getRandom({ referrer });
@@ -82,12 +82,15 @@ async function getRandom({ referrer } = {}) {
         }
       );
       const ads = await connection.collection('ads');
-      const count = await ads.countDocuments({
-        url: { $not: new RegExp(referrer) }
-      });
-
+      let query = {};
+      if (referrer) {
+        query = {
+          url: { $not: new RegExp(referrer) }
+        };
+      }
+      const count = await ads.countDocuments(query);
       const random = await ads
-        .find({ url: { $not: new RegExp(referrer) } })
+        .find(query)
         .skip(counter % count)
         .limit(1);
 
