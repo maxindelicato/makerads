@@ -55,7 +55,7 @@ export default async ({ referrer } = {}) => {
         </script>
       </head>
       <body>
-        <a class="makerad-link"  href="${url}">
+        <a class="makerad-link"  href="${url}" target="_blank" rel="noopener">
           <img class="makerad" src="${imgSrc}" />
         </a>
       </body>

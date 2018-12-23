@@ -17,7 +17,8 @@
     "scp": "scp makerads.tar.gz staging:/var/www/makerads",
     "tar": "tar cf makerads.tar.gz client/{dist,index.html,package.json} build config index.js package.json",
     "deploy": "npm run build && npm run tar && npm run scp",
-    "build": "babel -d ./build ./server"
+    "build": "babel -d ./build ./server",
+    "dev": "NODE_ENV=development node index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
