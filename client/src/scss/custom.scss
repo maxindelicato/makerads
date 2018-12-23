@@ -1,0 +1,57 @@
+.create-btn {
+  margin: 0 auto;
+}
+
+.makerad-box {
+  position: relative;
+  z-index: 2;
+  padding: 10px;
+
+  iframe {
+    box-shadow: 0 8px 24px rgba(32, 43, 54, 0.12);
+    transition: box-shadow 200ms ease-in-out, transform 200ms ease-in-out;
+  }
+
+  &:hover iframe {
+    box-shadow: 0 8px 24px rgba(32, 43, 54, 0.25);
+    transform: translateY(-3px);
+  }
+}
+
+.makerverts {
+  display: grid;
+
+  grid-template-columns: 100%;
+}
+
+.feature-title {
+  margin: 0 auto;
+}
+
+pre {
+  max-width: 570px;
+  margin: 0 auto;
+}
+
+.bubble-1,
+.bubble-2,
+.bubble-3 {
+  filter: grayscale(100%);
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.bubble-4 {
+  display: none;
+}
+
+.refresh-text {
+  font-size: 14spx;
+  margin-top: 25px;
+}
+
+@media (min-width: 640px) {
+  .makerverts {
+    grid-template-columns: 50% 50%;
+  }
+}

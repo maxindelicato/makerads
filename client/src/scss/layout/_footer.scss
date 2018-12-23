@@ -1,0 +1,104 @@
+.site-footer {
+  position: relative;
+  margin-top: 100px;
+  @include font-size(8, mobile, true, true, true);
+  @if (get-font-size(8, desktop) != get-font-size(8, mobile)) {
+    @include media('>medium') {
+      @include font-size(8, desktop, true, true, true);
+    }
+  }
+
+  &::before {
+    content: '';
+    filter: grayscale(90%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 259px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSIyMTciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPiAgPGRlZnM+ICAgIDxwYXRoIGQ9Ik0yNjEuNyAyODYuNjgyYzQyMS40NzcgMCAxNDg4Ljk3NyAxNzYuMDc4IDE0ODguOTc3IDM5LjIzNHM0NzguNzU0LTI0OC4wNDMgNTcuMjc4LTI0OC4wNDNjLTE5OC43NDYgMC00NjguNTY2IDMuNTU1LTcxOS45NTctMTEuMjNDODA2LjI3MSA1MC4wNzYgNTQxLjkgMjcuMjI3IDM0NC45NzcgNTIuNDM4LTI3LjY2NSAxMDAuMTQ1LTE1OS43NzYgMjg2LjY4MyAyNjEuNyAyODYuNjgzeiIgaWQ9ImEiLz4gIDwvZGVmcz4gIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yODUgLTQxKSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4gICAgPG1hc2sgaWQ9ImIiIGZpbGw9IiNmZmYiPiAgICAgIDx1c2UgeGxpbms6aHJlZj0iI2EiLz4gICAgPC9tYXNrPiAgICA8dXNlIGZpbGw9IiM4MzhERUEiIHhsaW5rOmhyZWY9IiNhIi8+ICAgIDxwYXRoIGQ9Ik0yNDAuNzI3IDMyNi4zOTVjNDIxLjQ3NiAwIDk3Mi43NDQgMTc5Ljc4NyA5NzIuNzQ0IDQyLjk0M3MxMjkuMjg2LTE3NS43NDgtMjkyLjE5LTE3NS43NDgtMjU2LjMxNC0yMjYuNDk0LTI1Ni4zMTQtODkuNjVjMCAxMzYuODQzLTg0NS43MTcgMjIyLjQ1NS00MjQuMjQgMjIyLjQ1NXoiIGZpbGw9IiNBMEE2RUUiIG1hc2s9InVybCgjYikiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDEzNTUuMTYyIDApIi8+ICAgIDxwYXRoIGQ9Ik00NDUuNyAzODcuNjgyYzQyMS40NzcgMCA5NzIuNzQ1IDE3OS43ODcgOTcyLjc0NSA0Mi45NDNzNTc5Ljk0MS0yNTUuMjQ2IDE1OC40NjUtMjU1LjI0Ni03MDYuOTY5LTE0Ni45OTYtNzA2Ljk2OS0xMC4xNTJjMCAxMzYuODQzLTg0NS43MTcgMjIyLjQ1NS00MjQuMjQgMjIyLjQ1NXoiIGZpbGw9IiM2MjZDRDUiIG1hc2s9InVybCgjYikiLz4gIDwvZz48L3N2Zz4=);
+    background-size: 100% 259px;
+    background-repeat: no-repeat;
+  }
+
+  a {
+    @include anchor-aspect(footer);
+  }
+}
+
+.site-footer-inner {
+  position: relative; /* To display all elements above the background color */
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.footer-brand,
+.footer-links,
+.footer-social-links,
+.footer-copyright {
+  flex: none;
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.footer-brand,
+.footer-links,
+.footer-social-links {
+  margin-bottom: 24px;
+}
+
+.footer-links,
+.footer-social-links {
+  li {
+    + li {
+      margin-left: 16px;
+    }
+  }
+}
+
+.footer-social-links {
+  li {
+    display: inline-flex;
+
+    a {
+      padding: 8px;
+    }
+  }
+}
+
+@include media('>medium') {
+  .site-footer {
+    &::before {
+      height: 202px;
+    }
+  }
+
+  .site-footer-inner {
+    justify-content: space-between;
+  }
+
+  .footer-brand,
+  .footer-links,
+  .footer-social-links,
+  .footer-copyright {
+    flex: 50%;
+  }
+
+  .footer-brand,
+  .footer-copyright {
+    justify-content: flex-start;
+  }
+
+  .footer-links,
+  .footer-social-links {
+    justify-content: flex-end;
+  }
+
+  .footer-links {
+    order: 1;
+    margin-bottom: 0;
+  }
+}

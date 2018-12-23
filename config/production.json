@@ -1,0 +1,10 @@
+{
+  "db": {
+    "user": "$DB_USER",
+    "password": "$DB_PASSWORD",
+    "host": "127.0.0.1",
+    "port": 27017,
+    "name": "makerads"
+  },
+  "url": "https://makerads.xyz"
+}

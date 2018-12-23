@@ -1,0 +1,115 @@
+.hero {
+    position: relative;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.hero-paragraph {
+    margin-bottom: 32px;
+}
+
+.hero-browser {
+    position: relative;
+    margin-top: 80px;
+}
+
+.hero-browser-inner {
+    position: relative; /* To display bubbles below the browser */
+
+    svg {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+}
+
+.bubble-1,
+.bubble-2,
+.bubble-3,
+.bubble-4 {
+    position: absolute;
+
+    svg {
+        height: auto;
+    }
+}
+
+.bubble-1 {
+    top: -15px;
+    left: 70px;
+
+    svg {
+        width: 34px;
+    }
+}
+
+.bubble-2 {
+    bottom: 0;
+    right: -30px;
+
+    svg {
+        width: 78px;
+    }
+}
+
+.bubble-3 {
+    left: -40px;
+    bottom: -40px;
+
+    svg {
+        width: 143px;
+    }
+}
+
+.bubble-4 {
+    top: -25px;
+    right: -54px;
+
+    svg {
+        width: 104px;
+    }
+}
+
+@include media( '>medium' ) {
+
+    .hero {
+        padding-top: 80px;
+        padding-bottom: 120px;
+    }
+
+    .hero-paragraph {
+        margin-bottom: 40px;
+        padding-left: 72px;
+        padding-right: 72px;
+    }
+
+    .bubble-1,
+    .bubble-2,
+    .bubble-3,
+    .bubble-4 {
+
+        svg {
+            width: auto;
+        }
+    }
+
+    .bubble-1 {
+        top: 85px;
+        left: -30px;
+    }
+
+    .bubble-2 {
+        bottom: -8px;
+        right: -75px;
+    }
+
+    .bubble-3 {
+        left: -140px;
+        bottom: -120px;
+    }
+
+    .bubble-4 {
+        top: -35px;
+        right: -110px;
+    }
+}
