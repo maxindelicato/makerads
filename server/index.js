@@ -26,12 +26,13 @@ app.use(express.urlencoded());
 // get random ad page
 app.get('/ad', async (req, res) => {
   const referrer = req.header('Referer');
+  const text = req.query.text !== undefined;
   let a;
   if (referrer) {
     const referrerUrl = url.parse(referrer);
-    a = await ad({ referrer: referrerUrl.host });
+    a = await ad({ referrer: referrerUrl.host, text: text });
   } else {
-    a = await ad();
+    a = await ad({ text: text });
   }
   res.send(a);
 });

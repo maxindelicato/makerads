@@ -65,7 +65,14 @@ async function updateRecords(ids) {
 }
 
 const insert = async fields => {
-  const { Image, Name, Email, URL, Duration } = fields;
+  const {
+    Image,
+    Name,
+    Email,
+    URL,
+    Duration,
+    Text
+ } = fields;
   console.log(`inserting ${URL}`);
   if (!Name) return null;
   // fetch image
@@ -75,7 +82,9 @@ const insert = async fields => {
     name: Name,
     email: Email,
     url: URL,
-    duration: Duration
+    duration: Duration,
+    product: fields['Product Name'],
+    text: Text
   };
   try {
     const col = await db().collection('ads');
