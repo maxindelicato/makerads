@@ -9,6 +9,32 @@
       href="https://fonts.googleapis.com/css?family=Lato:400,400i|Roboto:500"
       rel="stylesheet"
     />
+    <script type="text/javascript">
+      //some default pre init
+      var Countly = Countly || {};
+      Countly.q = Countly.q || [];
+
+      //provide countly initialization parameters
+      Countly.app_key = '83e962133509a315e018e92fa64785dc9e981e56';
+      Countly.url = 'https://analytics.squarecat.io';
+
+      Countly.q.push(['track_sessions']);
+      Countly.q.push(['track_pageview']);
+
+      //load countly script asynchronously
+      (function() {
+        var cly = document.createElement('script');
+        cly.type = 'text/javascript';
+        cly.async = true;
+        //enter url of script here
+        cly.src = 'https://analytics.squarecat.io/sdk/web/countly.min.js';
+        cly.onload = function() {
+          Countly.init();
+        };
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(cly, s);
+      })();
+    </script>
     <link rel="shortcut icon" href="/images/logo.png" />
     <link rel="stylesheet" href="dist/css/style.css" />
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
@@ -161,42 +187,36 @@
                     <iframe
                       style="border:0;width:320px;height:144px;"
                       src="https://makerads.xyz/ad"
-                      referer="makerads.xyz"
                     ></iframe>
                   </div>
                   <div class="makerad-box">
                     <iframe
                       style="border:0;width:320px;height:144px;"
                       src="https://makerads.xyz/ad"
-                      referer="makerads.xyz"
                     ></iframe>
                   </div>
                   <div class="makerad-box">
                     <iframe
                       style="border:0;width:320px;height:144px;"
                       src="https://makerads.xyz/ad"
-                      referer="makerads.xyz"
                     ></iframe>
                   </div>
                   <div class="makerad-box">
                     <iframe
                       style="border:0;width:320px;height:144px;"
                       src="https://makerads.xyz/ad"
-                      referer="makerads.xyz"
                     ></iframe>
                   </div>
                   <!-- <div class="makerad-box">
                           <iframe
                             style="border:0;width:320px;height:144px;"
                             src="https://makerads.xyz/ad"
-                            referer="makerads.xyz"
                           ></iframe>
                         </div>
                         <div class="makerad-box">
                           <iframe
                             style="border:0;width:320px;height:144px;"
                             src="https://makerads.xyz/ad"
-                            referer="makerads.xyz"
                           ></iframe>
                         </div> -->
                 </div>
@@ -407,42 +427,36 @@
                   <iframe
                     style="border:0;width:320px;height:144px;"
                     src="https://makerads.xyz/ad"
-                    referer="makerads.xyz"
                   ></iframe>
                 </div>
                 <div class="makerad-box">
                   <iframe
                     style="border:0;width:320px;height:144px;"
                     src="https://makerads.xyz/ad"
-                    referer="makerads.xyz"
                   ></iframe>
                 </div>
                 <div class="makerad-box">
                   <iframe
                     style="border:0;width:320px;height:144px;"
                     src="https://makerads.xyz/ad"
-                    referer="makerads.xyz"
                   ></iframe>
                 </div>
                 <div class="makerad-box">
                   <iframe
                     style="border:0;width:320px;height:144px;"
                     src="https://makerads.xyz/ad"
-                    referer="makerads.xyz"
                   ></iframe>
                 </div>
                 <div class="makerad-box">
                   <iframe
                     style="border:0;width:320px;height:144px;"
                     src="https://makerads.xyz/ad"
-                    referer="makerads.xyz"
                   ></iframe>
                 </div>
                 <div class="makerad-box">
                   <iframe
                     style="border:0;width:320px;height:144px;"
                     src="https://makerads.xyz/ad"
-                    referer="makerads.xyz"
                   ></iframe>
                 </div>
               </div>
