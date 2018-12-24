@@ -7,6 +7,14 @@ import path from 'path';
 import db, { connect, getAd, click, impression, initCounter } from './db';
 import ad, { jsonAd } from './ad';
 import fetchRecords from './records';
+import io from '@pm2/io';
+
+const impressionsSec = io.meter({
+  name: 'impressions/sec'
+});
+const clicksSec = io.meter({
+  name: 'clicks/sec'
+});
 
 const app = express();
 const server = http.createServer(app);
@@ -47,7 +55,8 @@ app.get('/ad/:id/redirect', async (req, res) => {
   try {
     const { url } = await getAd(adId);
     // log a click
-    click(adId);
+    click(adId, referrer);
+    clicksSec.mark();
     return res.redirect(`${url}?ref=${referrer}`);
   } catch (err) {
     console.error(err);
@@ -57,11 +66,12 @@ app.get('/ad/:id/redirect', async (req, res) => {
 
 app.get('/ad/:id/image', async (req, res) => {
   const adId = req.params.id;
-  const { referrer } = req.query;
+  const { ref: referrer } = req.query;
   try {
     const { image } = await getAd(adId);
     // log an impression
-    impression(adId);
+    impressionsSec.mark();
+    impression(adId, referrer);
     var img = new Buffer(image, 'base64');
     res.writeHead(200, {
       'Content-Type': 'image/png',
@@ -90,10 +100,9 @@ const App = {
 };
 
 if (process.env.NODE_ENV !== 'development') {
-  setInterval(() => {
+  io.action('db:sync', cb => {
     fetchRecords();
-  }, 1000 * 60);
-  fetchRecords();
+  });
 }
 
 export default App;

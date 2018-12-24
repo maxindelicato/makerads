@@ -66,7 +66,6 @@ export async function getRandom({ referrer } = {}) {
     await fetchingPromise;
     return getRandom({ referrer });
   }
-  console.log('get ad, not', referrer);
   fetching = true;
   fetchingPromise = new Promise(async (resolve, reject) => {
     try {
@@ -105,12 +104,36 @@ export async function getRandom({ referrer } = {}) {
   return fetchingPromise;
 }
 
-export async function click(id) {
+export async function click(id, referrer) {
   const col = await connection.collection('ads');
+  if (referrer) {
+    await addReferrerClick(referrer);
+  }
   return col.updateOne({ _id: new ObjectID(id) }, { $inc: { clicks: 1 } });
 }
 
-export async function impression(id) {
+export async function impression(id, referrer) {
   const col = await connection.collection('ads');
+  if (referrer) {
+    await addReferrerImpression(referrer);
+  }
   return col.updateOne({ _id: new ObjectID(id) }, { $inc: { impressions: 1 } });
+}
+
+export async function addReferrerImpression(ref) {
+  const col = await connection.collection('referrers');
+  return col.updateOne(
+    { referrer: ref },
+    { $inc: { impressions: 1 } },
+    { upsert: true }
+  );
+}
+
+export async function addReferrerClick(ref) {
+  const col = await connection.collection('referrers');
+  return col.updateOne(
+    { referrer: ref },
+    { $inc: { clicks: 1 } },
+    { upsert: true }
+  );
 }
