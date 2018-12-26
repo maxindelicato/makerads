@@ -10,11 +10,10 @@ function fetchLeaderboard() {
 
 export default () => {
   const { error, loading, value } = useAsync(fetchLeaderboard);
-  console.log(value);
   return (
     <div className="leaderboard">
       <h2>Top Referrers</h2>
-      <p>Get referred by the biggest names in the maker community.</p>
+      <p>Get referrals from the biggest names in the community.</p>
       {value ? (
         <table className="leaderboard-list">
           <thead>
