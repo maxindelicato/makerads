@@ -19,7 +19,8 @@
     "tar": "tar cf makerads.tar.gz client/{dist,index.html,package.json,images} build config index.js package.json",
     "deploy": "npm run build && npm run tar && npm run scp",
     "build": "babel -d ./build ./server",
-    "dev": "NODE_ENV=development node --inspect index.js"
+    "dev": "NODE_ENV=development node --inspect index.js",
+    "seed": "NODE_ENV=development babel-node ./scripts/seed.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",

@@ -30,7 +30,7 @@ export function connect() {
 }
 
 export function close() {
-  return connection.close();
+  return client.close();
 }
 
 export default function db() {
