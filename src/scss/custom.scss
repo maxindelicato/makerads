@@ -67,3 +67,37 @@ pre {
   width: 40px;
   margin-right: 10px;
 }
+
+.leaderboard {
+  text-align: center;
+}
+
+.leaderboard-list {
+  width: 100%;
+  max-width: 600px;
+  list-style: none;
+  margin: 75px auto;
+
+  th {
+    text-align: right;
+  }
+}
+
+.referrer {
+  font-weight: bold;
+  text-align: left;
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.referrer,
+.impressions,
+.clicks {
+  width: calc(100% / 3);
+}
+.impressions,
+.clicks {
+  text-align: right;
+}

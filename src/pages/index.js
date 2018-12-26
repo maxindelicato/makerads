@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, StaticQuery } from 'gatsby';
 
+import Leaderboard from '../components/leaderboard';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
 
@@ -221,6 +222,7 @@ const IndexPage = () => (
               </div>
             </section>
 
+            <Leaderboard />
             <section className="newsletter section">
               <div className="container-sm">
                 <div className="newsletter-inner section-inner">
