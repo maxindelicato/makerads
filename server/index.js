@@ -6,6 +6,7 @@ import url from 'url';
 import path from 'path';
 import io from '@pm2/io';
 
+import { connect } from './db';
 import adsApi from './rest/ads';
 import referrersApi from './rest/referrers';
 import fetchRecords from './records';

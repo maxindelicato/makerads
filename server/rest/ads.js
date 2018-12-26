@@ -1,5 +1,5 @@
-import ad, { jsonAd } from './ad';
-import db, { connect, getAd } from './db';
+import ad, { jsonAd } from '../services/ad-service';
+import db, { getAd } from '../db';
 import { trackClick, trackReferrer } from '../utils/tracking';
 
 export default app => {

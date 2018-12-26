@@ -1,5 +1,5 @@
 import io from '@pm2/io';
-import { click, impression } from './db';
+import { click, impression } from '../db';
 
 const impressionsSec = io.meter({
   name: 'impressions/sec'

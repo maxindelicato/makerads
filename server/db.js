@@ -137,3 +137,17 @@ export async function addReferrerClick(ref) {
     { upsert: true }
   );
 }
+
+export async function getReferrers({
+  skip = 0,
+  limit = 10,
+  sortBy = 'impressions'
+} = {}) {
+  try {
+    const col = await connection.collection('referrers');
+    return (await col.find({}, { skip, limit, sort: `-${sortBy}` })).toArray();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

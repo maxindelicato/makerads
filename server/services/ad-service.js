@@ -1,5 +1,6 @@
-import { getAd } from './db';
 import config from 'getconfig';
+
+import { getAd } from '../db';
 
 export async function jsonAd({ referrer } = {}) {
   const ad = await getAd(null, { referrer });
