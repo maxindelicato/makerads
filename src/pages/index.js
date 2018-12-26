@@ -18,7 +18,9 @@ const IndexPage = () => (
         }
       `}
       render={data => {
-        const url = data.site.siteMetadata.baseUrl;
+        const { baseUrl } = data.site.siteMetadata;
+        const url = `${baseUrl}/api/ad`;
+
         return (
           <main>
             <section className="hero text-center">
@@ -234,7 +236,7 @@ const IndexPage = () => (
                   <pre>
                     {`<iframe
   style="border:0;width:320px;height:144px;"
-  src=${url}
+  src="${url}"
 />`}
                   </pre>
                 </div>

@@ -8,8 +8,8 @@ export async function jsonAd({ referrer } = {}) {
     id: ad._id,
     impressions: ad.impressions || 0,
     clicks: ad.clicks || 0,
-    image: `${config.url}/ad/${ad._id}/image`,
-    url: `${config.url}/ad/${ad._id}/redirect`
+    image: `${config.url}/api/ad/${ad._id}/image`,
+    url: `${config.url}/api/ad/${ad._id}/redirect`
   };
   if (referrer) {
     jsonData = {
@@ -23,8 +23,8 @@ export async function jsonAd({ referrer } = {}) {
 
 export default async ({ referrer } = {}) => {
   const ad = await getAd(null, { referrer });
-  let url = `${config.url}/ad/${ad._id}/redirect`;
-  let imgSrc = `${config.url}/ad/${ad._id}/image`;
+  let url = `${config.url}/api/ad/${ad._id}/redirect`;
+  let imgSrc = `${config.url}/api/ad/${ad._id}/image`;
   if (referrer) {
     url = `${url}?ref=${referrer}`;
     imgSrc = `${imgSrc}?ref=${referrer}`;

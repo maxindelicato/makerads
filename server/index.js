@@ -20,8 +20,7 @@ app.use(express.urlencoded());
 
 app.use(express.static(path.join(__dirname, '../client')));
 
-adsApi(app);
-referrersApi(app);
+app.use('/api', adsApi, referrersApi);
 
 let listen;
 const App = {

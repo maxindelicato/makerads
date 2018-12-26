@@ -3,6 +3,8 @@ import config from 'getconfig';
 
 export let url;
 
+// Logger.setLevel('debug');
+
 if (config.db.user) {
   url = `mongodb://${config.db.user}:${config.db.password}@${config.db.host}:${
     config.db.port
@@ -145,7 +147,13 @@ export async function getReferrers({
 } = {}) {
   try {
     const col = await connection.collection('referrers');
-    return (await col.find({}, { skip, limit, sort: `-${sortBy}` })).toArray();
+    return col
+      .find({})
+      .project({ _id: 0, createdAt: 0, lastUpdatedAt: 0 })
+      .sort({ impressions: -1 })
+      .skip(0)
+      .limit(10)
+      .toArray();
   } catch (err) {
     console.error(err);
     throw err;
