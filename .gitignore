@@ -173,3 +173,4 @@ dist/
 build/
 *.tar.gz
 .vscode
+.env
