@@ -51,14 +51,15 @@ const App = {
 
 // action to manually refresh the database from AirTable
 if (process.env.NODE_ENV !== 'development') {
-  const fetchRecords = require('./records');
+  const fetchRecords = require('./records').default;
   io.action('db:sync', async cb => {
     console.log('syncing with airtable');
     try {
       await fetchRecords();
       cb({ success: true });
     } catch (err) {
-      cb({ success: false });
+      console.error(err);
+      cb({ success: false, err: err.message });
     }
   });
 }

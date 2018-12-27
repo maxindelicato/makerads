@@ -27,7 +27,7 @@ export default () => {
             {value.map(ref => (
               <tr key={ref.referrer}>
                 <td className="referrer">
-                  <a href={ref.referrer}>{`https://${ref.referrer}`}</a>
+                  <a href={`https://${ref.referrer}`}>{ref.referrer}</a>
                 </td>
                 <td className="impressions">{`${ref.impressions}`}</td>
                 <td className="clicks">{`${ref.clicks || 0}`}</td>

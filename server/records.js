@@ -11,10 +11,15 @@ const base = new Airtable({ apiKey: airTableConf.apiKey }).base(
 // used on LIVE to sync data with the AirTable
 // base, so that users can submit ads easily
 async function sync({ reset } = {}) {
-  const ids = await getRecords({ reset });
-  const updateIds = await updateExistingRecords();
-  if (!reset) {
-    await updateRecords([...ids, ...updateIds]);
+  try {
+    const ids = await getRecords({ reset });
+    const updateIds = await updateExistingRecords();
+    if (!reset) {
+      await updateRecords([...ids, ...updateIds]);
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
@@ -56,7 +61,7 @@ async function updateExistingRecords() {
     base('Table 1')
       .select({
         view: 'Grid view',
-        filterByFormula: 'Force Update'
+        filterByFormula: 'Update'
       })
       .eachPage(
         function page(records, fetchNextPage) {
@@ -90,7 +95,7 @@ async function updateRecords(ids) {
           id,
           {
             Inserted: true,
-            ['Force Update']: false
+            Update: false
           },
           function(err, record) {
             if (err) {
@@ -153,8 +158,10 @@ const update = async fields => {
         url: data.url
       },
       {
-        ...data,
-        lastUpdatedAt: isoDate()
+        $set: {
+          ...data,
+          lastUpdatedAt: isoDate()
+        }
       }
     );
     console.log(`users-dao: updated ad ${URL}`);
@@ -183,5 +190,5 @@ const fetchImage = async uri => {
 // even if has been inserted before.
 // used to reset the local database to match the airtable
 export default async function fetchRecords({ reset } = {}) {
-  sync({ reset });
+  return sync({ reset });
 }
