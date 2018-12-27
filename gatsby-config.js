@@ -1,10 +1,11 @@
 const { url } = require('getconfig');
 module.exports = {
   siteMetadata: {
-    title: `Makerads - Together we can do more ❤️`,
-    description: `MakerAds`,
-    author: `@jamesivings`,
-    baseUrl: url
+    title: `MakerAds - Together we can do more ❤️`,
+    description: `Unobtrusive adverts for makers`,
+    author: `@JamesIvings`,
+    baseUrl: url,
+    siteName: 'MakerAds'
   },
   plugins: [
     `gatsby-plugin-react-helmet`,

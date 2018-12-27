@@ -2,6 +2,9 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
 
+import metaImage from '../images/meta-image.png';
+import favicon from '../images/favicon.png';
+
 function SEO({ description, lang = 'en', meta = [], keywords, title }) {
   return (
     <StaticQuery
@@ -16,6 +19,7 @@ function SEO({ description, lang = 'en', meta = [], keywords, title }) {
             }}
             title={title}
             titleTemplate={`%s | ${data.site.siteMetadata.title}`}
+            link={[{ rel: 'icon', type: 'image/png', href: favicon }]}
             meta={[
               {
                 name: `description`,
@@ -34,8 +38,24 @@ function SEO({ description, lang = 'en', meta = [], keywords, title }) {
                 content: `website`
               },
               {
+                property: `og:site_name`,
+                content: data.site.siteMetadata.siteName
+              },
+              {
+                property: `og:url`,
+                content: data.site.siteMetadata.baseUrl
+              },
+              {
+                name: `og:image`,
+                content: `${data.site.siteMetadata.baseUrl}${metaImage}`
+              },
+              {
+                name: `og:image:secure_url`,
+                content: `${data.site.siteMetadata.baseUrl}${metaImage}`
+              },
+              {
                 name: `twitter:card`,
-                content: `summary`
+                content: `summary_large_image`
               },
               {
                 name: `twitter:creator`,
@@ -48,6 +68,18 @@ function SEO({ description, lang = 'en', meta = [], keywords, title }) {
               {
                 name: `twitter:description`,
                 content: metaDescription
+              },
+              {
+                name: `twitter:domain`,
+                content: data.site.siteMetadata.baseUrl
+              },
+              {
+                name: `twitter:url`,
+                content: data.site.siteMetadata.baseUrl
+              },
+              {
+                name: `twitter:image`,
+                content: `${data.site.siteMetadata.baseUrl}${metaImage}`
               }
             ]
               .concat(
@@ -59,7 +91,14 @@ function SEO({ description, lang = 'en', meta = [], keywords, title }) {
                   : []
               )
               .concat(meta)}
-          />
+          >
+            <meta charSet="utf-8" />
+            <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+          </Helmet>
         );
       }}
     />
@@ -75,6 +114,8 @@ const detailsQuery = graphql`
         title
         description
         author
+        baseUrl
+        siteName
       }
     }
   }

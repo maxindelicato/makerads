@@ -7,7 +7,7 @@ import SEO from '../components/seo';
 
 const IndexPage = () => (
   <Layout>
-    <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
+    <SEO />
     <StaticQuery
       query={graphql`
         query SiteUrlQuery {
