@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
 
-function SEO({ description, lang = 'en', meta = [], keywords, title }) {
+function SEO({ description, lang = 'en', meta = [], keywords = [], title }) {
   return (
     <StaticQuery
       query={detailsQuery}

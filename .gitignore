@@ -174,3 +174,4 @@ build/
 *.tar.gz
 .vscode
 .env
+public
