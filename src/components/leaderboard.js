@@ -23,15 +23,17 @@ export default () => {
               <th>Clicks</th>
             </tr>
           </thead>
-          {value.map(ref => (
-            <tr key={ref.referrer}>
-              <td className="referrer">
-                <a href={ref.referrer}>{ref.referrer}</a>
-              </td>
-              <td className="impressions">{`${ref.impressions}`}</td>
-              <td className="clicks">{`${ref.clicks || 0}`}</td>
-            </tr>
-          ))}
+          <tbody>
+            {value.map(ref => (
+              <tr key={ref.referrer}>
+                <td className="referrer">
+                  <a href={ref.referrer}>{ref.referrer}</a>
+                </td>
+                <td className="impressions">{`${ref.impressions}`}</td>
+                <td className="clicks">{`${ref.clicks || 0}`}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       ) : null}
     </div>

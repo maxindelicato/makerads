@@ -40,11 +40,11 @@ const Layout = ({ children }) => (
                         y2="100%"
                         id="logo-gradient-footer-b"
                       >
-                        <stop stop-color="#FFF" stop-opacity="0" offset="0%" />
-                        <stop stop-color="#FFF" offset="100%" />
+                        <stop stopColor="#FFF" stopOpacity="0" offset="0%" />
+                        <stop stopColor="#FFF" offset="100%" />
                       </linearGradient>
                     </defs>
-                    <g fill="none" fill-rule="evenodd">
+                    <g fill="none" fillRule="evenodd">
                       <mask id="logo-gradient-footer-c" fill="#fff">
                         <use
                           dangerouslySetInnerHTML={{
@@ -53,7 +53,7 @@ const Layout = ({ children }) => (
                         />
                       </mask>
                       <use
-                        fill-opacity=".32"
+                        fillOpacity=".32"
                         fill="#FFF"
                         dangerouslySetInnerHTML={{
                           __html: 'xlink:href="#logo-gradient-footer-a"'
