@@ -6,5 +6,9 @@
     "port": 27017,
     "name": "makerads"
   },
-  "url": "https://makerads.xyz"
+  "url": "https://makerads.xyz",
+  "airtable": {
+    "apiKey": "$AIRTABLE_API_KEY",
+    "base": "$AIRTABLE_BASE_ID"
+  }
 }
