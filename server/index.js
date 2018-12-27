@@ -53,7 +53,12 @@ const App = {
 if (process.env.NODE_ENV !== 'development') {
   const fetchRecords = require('./records');
   io.action('db:sync', cb => {
-    fetchRecords();
+    try {
+      await fetchRecords();
+      cb({ success: true });
+    } catch (err) {
+      cb({ success: false });
+    }
   });
 }
 
