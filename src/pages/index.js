@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, StaticQuery } from 'gatsby';
+import { Link, StaticQuery, graphql } from 'gatsby';
 
 import Leaderboard from '../components/leaderboard';
 import Layout from '../components/layout';
@@ -20,8 +20,7 @@ const IndexPage = () => (
       `}
       render={data => {
         const { baseUrl } = data.site.siteMetadata;
-        const url = `${baseUrl}/api/ad`;
-
+        const url = `${baseUrl}/ad`;
         return (
           <main>
             <section className="hero text-center">
@@ -223,7 +222,7 @@ const IndexPage = () => (
             </section>
 
             <Leaderboard />
-            <section className="newsletter section">
+            <section className="newsletter section" id="embed">
               <div className="container-sm">
                 <div className="newsletter-inner section-inner">
                   <div className="newsletter-header text-center is-revealing">

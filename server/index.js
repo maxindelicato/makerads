@@ -1,4 +1,5 @@
 import express from 'express';
+import httpProxy from 'http-proxy';
 import http from 'http';
 import config from 'getconfig';
 import helmet from 'helmet';
@@ -18,9 +19,23 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use(express.static(path.join(__dirname, '../client')));
+app.use('/api', referrersApi);
+adsApi(app);
 
-app.use('/api', adsApi, referrersApi);
+// if (process.env.NODE_ENV === 'development') {
+//   console.info('index: serving dev assets');
+//   const proxy = httpProxy.createProxyServer();
+//   app.all('*', (req, res) => {
+//     proxy.web(req, res, {
+//       target: 'http://localhost:8000'
+//     });
+//   });
+//   proxy.on('error', e => {
+//     console.error('index: proxy error', e);
+//   });
+// } else {
+app.use(express.static(path.join(__dirname, '../public')));
+// }
 
 let listen;
 const App = {

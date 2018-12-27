@@ -5,7 +5,7 @@ import { StaticQuery, graphql } from 'gatsby';
 import metaImage from '../images/meta-image.png';
 import favicon from '../images/favicon.png';
 
-function SEO({ description, lang = 'en', meta = [], keywords, title }) {
+function SEO({ description, lang = 'en', meta = [], keywords = [], title }) {
   return (
     <StaticQuery
       query={detailsQuery}

@@ -11,7 +11,7 @@ function fetchLeaderboard() {
 export default () => {
   const { error, loading, value } = useAsync(fetchLeaderboard);
   return (
-    <div className="leaderboard">
+    <div className="leaderboard" id="leaderboard">
       <h2>Top Referrers</h2>
       <p>Get referrals from the biggest names in the community.</p>
       {value ? (

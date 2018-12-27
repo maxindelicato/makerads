@@ -142,17 +142,17 @@ export async function addReferrerClick(ref) {
 
 export async function getReferrers({
   skip = 0,
-  limit = 10,
+  limit = 5,
   sortBy = 'impressions'
 } = {}) {
   try {
     const col = await connection.collection('referrers');
     return col
-      .find({})
+      .find({ referrer: { $regex: '^(?!local.)' } })
       .project({ _id: 0, createdAt: 0, lastUpdatedAt: 0 })
       .sort({ impressions: -1 })
-      .skip(0)
-      .limit(10)
+      .skip(skip)
+      .limit(limit)
       .toArray();
   } catch (err) {
     console.error(err);
