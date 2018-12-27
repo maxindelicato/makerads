@@ -39,6 +39,9 @@ const IndexPage = () => (
                     >
                       Add your product for free
                     </a>
+                    <span className="submission-text">
+                      All submissions are manually verified
+                    </span>
                   </div>
                   <div className="hero-browser">
                     <div className="bubble-3 is-revealing">

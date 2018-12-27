@@ -101,3 +101,13 @@ pre {
 .clicks {
   text-align: right;
 }
+
+.newsletter-form {
+  flex-direction: column;
+}
+.submission-text {
+  display: block;
+  font-size: 65%;
+  opacity: 0.55;
+  margin-top: 10px;
+}
