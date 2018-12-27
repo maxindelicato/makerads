@@ -12,7 +12,7 @@ const base = new Airtable({ apiKey: airTableConf.apiKey }).base(
 // base, so that users can submit ads easily
 async function sync({ reset } = {}) {
   const ids = await getRecords({ reset });
-  const updateIds = await updateRecords();
+  const updateIds = await updateExistingRecords();
   if (!reset) {
     await updateRecords([...ids, ...updateIds]);
   }
@@ -50,7 +50,7 @@ async function getRecords({ reset = false } = {}) {
   });
 }
 
-async function updateRecords() {
+async function updateExistingRecords() {
   return new Promise((resolve, reject) => {
     let recordIds = [];
     base('Table 1')

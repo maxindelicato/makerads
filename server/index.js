@@ -53,7 +53,13 @@ const App = {
 if (process.env.NODE_ENV !== 'development') {
   const fetchRecords = require('./records');
   io.action('db:sync', cb => {
-    fetchRecords();
+    console.log('syncing with airtable');
+    try {
+      await fetchRecords();
+      cb({ success: true });
+    } catch (err) {
+      cb({ success: false });
+    }
   });
 }
 
