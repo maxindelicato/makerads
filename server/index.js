@@ -10,7 +10,6 @@ import io from '@pm2/io';
 import { connect } from './db';
 import adsApi from './rest/ads';
 import referrersApi from './rest/referrers';
-import fetchRecords from './records';
 
 const app = express();
 const server = http.createServer(app);
@@ -52,6 +51,7 @@ const App = {
 
 // action to manually refresh the database from AirTable
 if (process.env.NODE_ENV !== 'development') {
+  const fetchRecords = require('./records');
   io.action('db:sync', cb => {
     fetchRecords();
   });

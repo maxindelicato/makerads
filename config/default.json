@@ -4,9 +4,5 @@
     "port": 27017,
     "name": "makerads"
   },
-  "url": "http://local.makerads.xyz",
-  "airtable": {
-    "apiKey": "$AIRTABLE_API_KEY",
-    "base": "$AIRTABLE_BASE_ID"
-  }
+  "url": "http://local.makerads.xyz"
 }
