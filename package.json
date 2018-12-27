@@ -22,7 +22,7 @@
     "dev": "NODE_ENV=development node --inspect index.js",
     "seed": "NODE_ENV=development babel-node ./scripts/seed.js",
     "client:build": "gatsby build",
-    "client:develop": "gatsby develop",
+    "client:dev": "gatsby develop",
     "client:start": "npm run develop"
   },
   "devDependencies": {

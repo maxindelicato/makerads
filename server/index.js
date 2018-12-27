@@ -22,20 +22,20 @@ app.use(express.urlencoded());
 app.use('/api', referrersApi);
 adsApi(app);
 
-// if (process.env.NODE_ENV === 'development') {
-//   console.info('index: serving dev assets');
-//   const proxy = httpProxy.createProxyServer();
-//   app.all('*', (req, res) => {
-//     proxy.web(req, res, {
-//       target: 'http://localhost:8000'
-//     });
-//   });
-//   proxy.on('error', e => {
-//     console.error('index: proxy error', e);
-//   });
-// } else {
-app.use(express.static(path.join(__dirname, '../public')));
-// }
+if (process.env.NODE_ENV === 'development') {
+  console.info('index: serving dev assets');
+  const proxy = httpProxy.createProxyServer();
+  app.all('/*', (req, res) => {
+    proxy.web(req, res, {
+      target: 'http://localhost:8000'
+    });
+  });
+  proxy.on('error', e => {
+    console.error('index: proxy error', e);
+  });
+} else {
+  app.use(express.static(path.join(__dirname, '../public')));
+}
 
 let listen;
 const App = {
