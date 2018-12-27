@@ -8,7 +8,7 @@ const Header = ({ siteTitle }) => (
       <div className="site-header-inner">
         <div className="brand header-brand">
           <h1 className="m-0">
-            <Link className="header-link" href="/">
+            <Link className="header-link" to="/">
               <img className="header-logo" src={logo} alt="logo" />
               MakerAds
             </Link>

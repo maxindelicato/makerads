@@ -7,7 +7,7 @@ import SEO from '../components/seo';
 
 const IndexPage = () => (
   <Layout>
-    <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
+    <SEO />
     <StaticQuery
       query={graphql`
         query SiteUrlQuery {
@@ -49,7 +49,7 @@ const IndexPage = () => (
                             id="bubble-3-a"
                           />
                         </defs>
-                        <g fill="none" fill-rule="evenodd">
+                        <g fill="none" fillRule="evenodd">
                           <mask id="bubble-3-b" fill="#fff">
                             <use
                               dangerouslySetInnerHTML={{
@@ -84,7 +84,7 @@ const IndexPage = () => (
                             id="bubble-4-a"
                           />
                         </defs>
-                        <g fill="none" fill-rule="evenodd">
+                        <g fill="none" fillRule="evenodd">
                           <mask id="bubble-4-b" fill="#fff">
                             <use
                               dangerouslySetInnerHTML={{
@@ -152,7 +152,7 @@ const IndexPage = () => (
                             id="bubble-1-a"
                           />
                         </defs>
-                        <g fill="none" fill-rule="evenodd">
+                        <g fill="none" fillRule="evenodd">
                           <mask id="bubble-1-b" fill="#fff">
                             <use
                               dangerouslySetInnerHTML={{
@@ -173,7 +173,7 @@ const IndexPage = () => (
                           />
                           <path
                             d="M74 30.992c17.673 0 28.05 17.673 28.05 0S91.674-13 74-13C56.327-13 42 1.327 42 19c0 17.673 14.327 11.992 32 11.992z"
-                            fill-opacity=".8"
+                            fillOpacity=".8"
                             fill="#FFA3B5"
                             mask="url(#bubble-1-b)"
                           />
@@ -188,7 +188,7 @@ const IndexPage = () => (
                             id="bubble-2-a"
                           />
                         </defs>
-                        <g fill="none" fill-rule="evenodd">
+                        <g fill="none" fillRule="evenodd">
                           <mask id="bubble-2-b" fill="#fff">
                             <use
                               dangerouslySetInnerHTML={{
