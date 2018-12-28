@@ -29,6 +29,11 @@ export default async ({ referrer } = {}) => {
     url = `${url}?ref=${referrer}`;
     imgSrc = `${imgSrc}?ref=${referrer}`;
   }
+  let linkClass = `makerad-link makerad-link--${ad.labelPosition}`;
+  if (ad.sponsored) {
+    linkClass = `${linkClass} makerad-link--sponsored`;
+  }
+
   return `
     <html>
       <head>
@@ -42,6 +47,7 @@ export default async ({ referrer } = {}) => {
             display: inline-block;
             width: 320px;
             height: 144px;
+            position: relative;
           }
           .makerad {
             display: block;
@@ -50,13 +56,35 @@ export default async ({ referrer } = {}) => {
             border-radius: 4px;
             overflow: hidden;
           }
+          .makerad-link:after {
+            content: "Ad by MakerAds";
+            position: absolute;
+            bottom: 0;
+            font-family: sans-serif;
+            font-size: 10px;
+            background: rgba(0,0,0,0.12);
+            padding: 4px 6px;
+
+            color: rgba(255,255,255,0.75);
+          }
+          .makerad-link--sponsored:after {
+            content: "Sponsored ad by MakerAds";
+          }
+          .makerad-link--right:after {
+            right: 0;
+            border-top-left-radius: 2px;
+          }
+          .makerad-link--left:after {
+            left: 0;
+            border-top-right-radius: 2px;
+          }
         </style>
         <script>
 
         </script>
       </head>
       <body>
-        <a class="makerad-link"  href="${url}" target="_blank" rel="noopener">
+        <a class="${linkClass}"  href="${url}" target="_blank" rel="noopener">
           <img class="makerad" src="${imgSrc}" />
         </a>
       </body>
