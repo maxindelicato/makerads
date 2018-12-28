@@ -36,6 +36,10 @@ export default () => {
           </tbody>
         </table>
       ) : null}
+      <p>
+        All of our referrers take part in our revenue share system, through
+        which we distribute 90% of our earnings from sponsored ads.
+      </p>
     </div>
   );
 };

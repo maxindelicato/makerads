@@ -1,0 +1,25 @@
+.modal {
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  height: 400px;
+  position: absolute;
+  top: 100px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(32, 43, 54, 0.15);
+  z-index: 10;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+.modal-bg {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.85);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+}
