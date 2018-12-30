@@ -10,6 +10,7 @@ import io from '@pm2/io';
 import { connect } from './db';
 import adsApi from './rest/ads';
 import referrersApi from './rest/referrers';
+import statsApi from './rest/stats';
 
 const app = express();
 const server = http.createServer(app);
@@ -18,7 +19,8 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use('/api', referrersApi);
+app.use('/api', referrersApi, statsApi);
+
 adsApi(app);
 
 if (process.env.NODE_ENV === 'development') {

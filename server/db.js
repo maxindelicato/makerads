@@ -1,5 +1,9 @@
 import { MongoClient, Logger, ObjectID } from 'mongodb';
 import config from 'getconfig';
+import counter from 'sliding-window-counter';
+
+const impressionsCount = counter(1000 * 60);
+const clicksCount = counter(1000 * 60);
 
 export let url;
 
@@ -108,6 +112,7 @@ export async function getRandom({ referrer } = {}) {
 
 export async function click(id, referrer) {
   const col = await connection.collection('ads');
+  clicksCount(1);
   if (referrer) {
     await addReferrerClick(referrer);
   }
@@ -116,6 +121,7 @@ export async function click(id, referrer) {
 
 export async function impression(id, referrer) {
   const col = await connection.collection('ads');
+  impressionsCount(1);
   if (referrer) {
     await addReferrerImpression(referrer);
   }
@@ -158,4 +164,32 @@ export async function getReferrers({
     console.error(err);
     throw err;
   }
+}
+
+async function getTotals() {
+  const col = await connection.collection('referrers');
+  return col
+    .aggregate([
+      {
+        $group: {
+          _id: 'Totals',
+          impressions: { $sum: '$impressions' },
+          clicks: { $sum: '$clicks' }
+        }
+      }
+    ])
+    .toArray();
+}
+
+export async function getStats() {
+  const referrers = await getReferrers({ limit: 10 });
+  const [totals] = await getTotals();
+  const { clicks, impressions } = totals;
+  return {
+    referrers,
+    totalClicks: clicks,
+    totalImpressions: impressions,
+    impressionsPerMin: impressionsCount(),
+    clicksPerMin: clicksCount()
+  };
 }

@@ -20,7 +20,6 @@
 
 .makerverts {
   display: grid;
-
   grid-template-columns: 100%;
 }
 
@@ -257,5 +256,31 @@ pre {
 
   &.active {
     background-color: white;
+  }
+}
+
+@media (max-width: 400px) {
+  .makerverts {
+    margin: 0 -16px;
+  }
+  .makerad-box {
+    padding: 0;
+  }
+
+  .leaderboard {
+    table {
+      font-size: 14px;
+      margin: 60px -16px;
+    }
+    th:first-child,
+    td:first-child,
+    th:last-child,
+    td:last-child {
+      padding: 10px 10px;
+    }
+  }
+
+  pre {
+    margin: 20px -16px 40px -16px;
   }
 }
