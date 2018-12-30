@@ -1,0 +1,33 @@
+{
+  "name": "gatsby-plugin-countly",
+  "description": "Gatsby plugin to add Countly analytics onto a site",
+  "version": "0.2.0",
+  "author": "James Ivings <james@squarecat.io>",
+  "bugs": {
+    "url": "https://github.com/squarecat/gatsby-plugin-countly/issues"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "cross-env": "^5.1.4"
+  },
+  "homepage": "https://github.com/gatsbyjs/gatsby/tree/master/packages/gatsby-plugin-countly#readme",
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "countly analytics"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "gatsby": ">2.0.0-alpha"
+  },
+  "repository": "https://github.com/gatsbyjs/gatsby/tree/master/packages/gatsby-plugin-countly",
+  "scripts": {
+    "build": "babel src --out-dir . --ignore **/__tests__",
+    "watch": "babel -w src --out-dir . --ignore **/__tests__"
+  }
+}
