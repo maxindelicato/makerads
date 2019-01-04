@@ -7,7 +7,7 @@ import url from 'url';
 import path from 'path';
 import io from '@pm2/io';
 
-import { connect } from './db';
+import { connect, organiseSponsors } from './db';
 import adsApi from './rest/ads';
 import referrersApi from './rest/referrers';
 import statsApi from './rest/stats';
@@ -42,7 +42,9 @@ let listen;
 const App = {
   async start() {
     console.info('server starting');
-    connect();
+    await connect();
+    console.info('sorting sponsors');
+    await organiseSponsors();
     listen = server.listen(1234);
     console.info('server started');
   },
@@ -58,6 +60,7 @@ if (process.env.NODE_ENV !== 'development') {
     console.log('syncing with airtable');
     try {
       await fetchRecords();
+      await organiseSponsors();
       cb({ success: true });
     } catch (err) {
       console.error(err);

@@ -12,7 +12,7 @@ const fetchStats = () => {
     .catch(err => console.error(err));
 };
 
-const IndexPage = () => {
+export default () => {
   return (
     <Layout>
       <SEO />

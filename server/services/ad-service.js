@@ -64,11 +64,10 @@ export default async ({ referrer } = {}) => {
             font-size: 10px;
             background: rgba(0,0,0,0.12);
             padding: 4px 6px;
-
             color: rgba(255,255,255,0.75);
           }
           .makerad-link--sponsored:after {
-            content: "Sponsored ad by MakerAds";
+            content: "Sponsored Ad by MakerAds";
           }
           .makerad-link--right:after {
             right: 0;
@@ -79,9 +78,6 @@ export default async ({ referrer } = {}) => {
             border-top-right-radius: 2px;
           }
         </style>
-        <script>
-
-        </script>
       </head>
       <body>
         <a class="${linkClass}"  href="${url}" target="_blank" rel="noopener">

@@ -3,7 +3,12 @@ import db, { isoDate, connect, close } from '../server/db';
 import adsJson from './ads.json';
 import referrersJson from './referrers.json';
 const counterJson = {
-  counter: 0
+  counter: 0,
+  sponsorCounter: 0,
+  showSponsorEvery: 10,
+  sponsorMod: 0,
+  sponsorQuantity: 0,
+  adQuantity: 0
 };
 
 async function seed() {

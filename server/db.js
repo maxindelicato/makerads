@@ -76,27 +76,60 @@ export async function getRandom({ referrer } = {}) {
   fetchingPromise = new Promise(async (resolve, reject) => {
     try {
       const col = await connection.collection('counter');
-      const { counter } = await col.findOne();
-      console.log('serving ad', counter);
+      const {
+        counter,
+        sponsorCounter,
+        sponsorMod,
+        adQuantity,
+        sponsorQuantity
+      } = await col.findOne();
+      const ads = await connection.collection('ads');
+      let query;
+      let skipNumber;
+      // determine if to show a regular ad or a sponsored ad
+      if (sponsorCounter % sponsorMod === 0) {
+        query = {
+          sponsored: true
+        };
+        skipNumber = (sponsorCounter / sponsorMod) % sponsorQuantity;
+      } else {
+        query = {
+          sponsored: { $ne: true }
+        };
+        skipNumber = counter % adQuantity;
+        await col.updateOne(
+          {},
+          {
+            $inc: {
+              counter: 1
+            }
+          }
+        );
+      }
+
+      // if there is a referrer, make sure not to
+      // return that referrers ad if there is one
+      // FIXME, this will skip this referrer
+      // for this round, which is not ideal
+      if (referrer) {
+        query = {
+          ...query,
+          url: { $not: new RegExp(referrer) }
+        };
+      }
+
       await col.updateOne(
         {},
         {
           $inc: {
-            counter: 1
+            sponsorCounter: 1
           }
         }
       );
-      const ads = await connection.collection('ads');
-      let query = {};
-      if (referrer) {
-        query = {
-          url: { $not: new RegExp(referrer) }
-        };
-      }
-      const count = await ads.countDocuments(query);
+
       const random = await ads
         .find(query)
-        .skip(counter % count)
+        .skip(skipNumber)
         .limit(1);
 
       const output = await random.toArray();
@@ -179,6 +212,29 @@ async function getTotals() {
       }
     ])
     .toArray();
+}
+
+export async function organiseSponsors() {
+  const ads = await connection.collection('ads');
+  const sponsorCount = await ads.countDocuments({
+    sponsored: true
+  });
+  const adCount = await ads.countDocuments({
+    sponsored: { $ne: true }
+  });
+  const counterCol = await connection.collection('counter');
+  const { showSponsorEvery } = await counterCol.findOne({});
+  const sponsorMod = showSponsorEvery / sponsorCount;
+  return counterCol.updateOne(
+    {},
+    {
+      $set: {
+        sponsorMod,
+        sponsorQuantity: sponsorCount,
+        adQuantity: adCount
+      }
+    }
+  );
 }
 
 export async function getStats() {
