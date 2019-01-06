@@ -6,6 +6,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.3",
     "@pm2/io": "^2.4.7",
+    "agenda": "^2.0.2",
     "airtable": "^0.5.8",
     "date-fns": "^1.30.1",
     "express": "^4.16.4",
@@ -15,7 +16,8 @@
     "helmet": "^3.15.0",
     "mongodb": "^3.1.10",
     "request": "^2.88.0",
-    "sliding-window-counter": "^0.2.4"
+    "sliding-window-counter": "^0.2.4",
+    "stripe": "^6.20.0"
   },
   "scripts": {
     "scp": "scp makerads.tar.gz staging:/var/www/makerads",
@@ -26,7 +28,8 @@
     "seed": "NODE_ENV=development babel-node ./scripts/seed.js",
     "client:build": "gatsby build",
     "client:dev": "gatsby develop",
-    "client:start": "npm run develop"
+    "client:start": "npm run develop",
+    "promo": "babel-node scripts/promo.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",

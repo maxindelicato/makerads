@@ -1,6 +1,7 @@
 import { MongoClient, Logger, ObjectID } from 'mongodb';
 import config from 'getconfig';
 import counter from 'sliding-window-counter';
+import Agenda from 'agenda';
 
 const impressionsCount = counter(1000 * 60);
 const clicksCount = counter(1000 * 60);
@@ -138,6 +139,7 @@ export async function getRandom({ referrer } = {}) {
       reject(err);
     } finally {
       fetching = false;
+      ss;
     }
   });
   return fetchingPromise;
@@ -149,7 +151,17 @@ export async function click(id, referrer) {
   if (referrer) {
     await addReferrerClick(referrer);
   }
-  return col.updateOne({ _id: new ObjectID(id) }, { $inc: { clicks: 1 } });
+  return col.updateOne(
+    {
+      _id: new ObjectID(id)
+    },
+    {
+      $inc: {
+        clicks: 1,
+        clicksToday: 1
+      }
+    }
+  );
 }
 
 export async function impression(id, referrer) {
@@ -158,14 +170,21 @@ export async function impression(id, referrer) {
   if (referrer) {
     await addReferrerImpression(referrer);
   }
-  return col.updateOne({ _id: new ObjectID(id) }, { $inc: { impressions: 1 } });
+  return col.updateOne(
+    { _id: new ObjectID(id) },
+    {
+      $inc: { impressions: 1, impressionsToday: 1 }
+    }
+  );
 }
 
 export async function addReferrerImpression(ref) {
   const col = await connection.collection('referrers');
   return col.updateOne(
     { referrer: ref },
-    { $inc: { impressions: 1 } },
+    {
+      $inc: { impressions: 1, impressionsToday: 1 }
+    },
     { upsert: true }
   );
 }
@@ -174,7 +193,9 @@ export async function addReferrerClick(ref) {
   const col = await connection.collection('referrers');
   return col.updateOne(
     { referrer: ref },
-    { $inc: { clicks: 1 } },
+    {
+      $inc: { clicks: 1, clicksToday: 1 }
+    },
     { upsert: true }
   );
 }
@@ -248,4 +269,95 @@ export async function getStats() {
     impressionsPerMin: impressionsCount(),
     clicksPerMin: clicksCount()
   };
+}
+
+export async function recordDayStats() {
+  const adsCol = await connection.collection('ads');
+  const refsCol = await connection.collection('referrers');
+  const statsCol = await connection.collection('stats');
+  let totalClicksToday = 0;
+  let totalImpressionsToday = 0;
+  // update ads history object with todays stats
+  const ads = await adsCol
+    .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
+    .toArray();
+
+  await Promise.all(
+    ads.map(({ _id, clicksToday, impressionsToday }) => {
+      totalClicksToday = totalClicksToday + clicksToday;
+      totalImpressionsToday = totalImpressionsToday + impressionsToday;
+      return adsCol.updateOne(
+        { _id },
+        {
+          $push: {
+            history: {
+              timestamp: isoDate(),
+              impressions: impressionsToday,
+              clicks: clicksToday
+            }
+          },
+          $set: {
+            impressionsToday: 0,
+            clicksToday: 0
+          }
+        }
+      );
+    })
+  );
+  // update referrers history object with todays stats
+  const refs = await refsCol
+    .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
+    .toArray();
+
+  await Promise.all(
+    refs.map(({ _id, clicksToday, impressionsToday }) =>
+      refsCol.updateOne(
+        { _id },
+        {
+          $push: {
+            history: {
+              timestamp: isoDate(),
+              impressions: impressionsToday,
+              clicks: clicksToday
+            }
+          },
+          $set: {
+            impressionsToday: 0,
+            clicksToday: 0
+          }
+        }
+      )
+    )
+  );
+
+  await statsCol.updateOne(
+    {},
+    {
+      $inc: {
+        totalImpressions: totalImpressionsToday,
+        totalClicks: totalClicksToday
+      },
+      $push: {
+        history: {
+          timestamp: isoDate(),
+          impressions: totalImpressionsToday,
+          clicks: totalClicksToday
+        }
+      }
+    }
+  );
+}
+const agenda = new Agenda({ db: { address: url } });
+
+agenda.define('record day stats', async (job, done) => {
+  console.log('recording day stats');
+  recordDayStats();
+});
+
+export async function recordStats() {
+  console.log('starting agenda');
+  agenda.on('ready', async () => {
+    await agenda.start();
+    await agenda.every('0 0 * * *', 'record day stats');
+  });
 }

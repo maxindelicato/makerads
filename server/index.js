@@ -7,7 +7,7 @@ import url from 'url';
 import path from 'path';
 import io from '@pm2/io';
 
-import { connect, organiseSponsors } from './db';
+import { connect, organiseSponsors, recordDayStats } from './db';
 import adsApi from './rest/ads';
 import referrersApi from './rest/referrers';
 import statsApi from './rest/stats';
@@ -61,6 +61,7 @@ if (process.env.NODE_ENV !== 'development') {
     try {
       await fetchRecords();
       await organiseSponsors();
+
       cb({ success: true });
     } catch (err) {
       console.error(err);
