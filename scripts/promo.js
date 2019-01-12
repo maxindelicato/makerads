@@ -1,7 +1,10 @@
-var stripe = require('stripe')('sk_test_H0LVTfIjgEHsovy0jpyOg6vB');
+var stripe = require('stripe')('sk_live_weApCf0KXuIxrkEyulIRhFzc');
 
 async function doIt() {
-  const { id } = await createCustomer({ email: 'james@squarecat.io' });
+  const { id } = await createCustomer({
+    email: 'mj@erxes.io',
+    currency: 'usd'
+  });
   const payment = await createPayment({ customerId: id, productPrice: 2500 });
 }
 

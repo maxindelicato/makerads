@@ -15,6 +15,7 @@
     "getconfig": "^4.5.0",
     "helmet": "^3.15.0",
     "mongodb": "^3.1.10",
+    "node-cron": "^2.0.3",
     "request": "^2.88.0",
     "sliding-window-counter": "^0.2.4",
     "stripe": "^6.20.0"

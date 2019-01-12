@@ -1,7 +1,7 @@
 import { MongoClient, Logger, ObjectID } from 'mongodb';
 import config from 'getconfig';
 import counter from 'sliding-window-counter';
-import Agenda from 'agenda';
+import cron from 'node-cron';
 
 const impressionsCount = counter(1000 * 60);
 const clicksCount = counter(1000 * 60);
@@ -139,7 +139,6 @@ export async function getRandom({ referrer } = {}) {
       reject(err);
     } finally {
       fetching = false;
-      ss;
     }
   });
   return fetchingPromise;
@@ -272,92 +271,110 @@ export async function getStats() {
 }
 
 export async function recordDayStats() {
-  const adsCol = await connection.collection('ads');
-  const refsCol = await connection.collection('referrers');
-  const statsCol = await connection.collection('stats');
-  let totalClicksToday = 0;
-  let totalImpressionsToday = 0;
-  // update ads history object with todays stats
-  const ads = await adsCol
-    .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
-    .toArray();
+  console.log('recording day stats');
+  try {
+    const adsCol = await connection.collection('ads');
+    const refsCol = await connection.collection('referrers');
+    const statsCol = await connection.collection('counter');
+    const sponsorCount = await adsCol.countDocuments({
+      sponsored: true
+    });
+    // FIXME, get this from sponsored ad post
+    // cost = count * $25 per ad as pence / 30 days the sponsored ads run * 0.9
+    // (90% of total is distributed)
+    const sponsorCost = ((sponsorCount * 2500) / 30) * 0.9;
+    let totalClicksToday = 0;
+    let totalImpressionsToday = 0;
+    // update ads history object with todays stats
+    const ads = await adsCol
+      .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1, sponsored: 1 })
+      .toArray();
 
-  await Promise.all(
-    ads.map(({ _id, clicksToday, impressionsToday }) => {
-      totalClicksToday = totalClicksToday + clicksToday;
-      totalImpressionsToday = totalImpressionsToday + impressionsToday;
-      return adsCol.updateOne(
-        { _id },
-        {
-          $push: {
-            history: {
-              timestamp: isoDate(),
-              impressions: impressionsToday,
-              clicks: clicksToday
-            }
-          },
-          $set: {
-            impressionsToday: 0,
-            clicksToday: 0
-          }
+    const totalClicks = ads.reduce(
+      (total, ad) => total + (ad.sponsored ? 0 : ad.clicksToday),
+      0
+    );
+    let earningsPerClick = sponsorCost / totalClicks;
+    await Promise.all(
+      ads.map(({ _id, clicksToday, impressionsToday, sponsored }) => {
+        totalClicksToday = totalClicksToday + clicksToday;
+        totalImpressionsToday = totalImpressionsToday + impressionsToday;
+        let earnings = sponsored ? 0 : clicksToday * earningsPerClick;
+        if (isNaN(earnings)) {
+          earnings = 0;
         }
-      );
-    })
-  );
-  // update referrers history object with todays stats
-  const refs = await refsCol
-    .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
-    .toArray();
-
-  await Promise.all(
-    refs.map(({ _id, clicksToday, impressionsToday }) =>
-      refsCol.updateOne(
-        { _id },
-        {
-          $push: {
-            history: {
-              timestamp: isoDate(),
-              impressions: impressionsToday,
-              clicks: clicksToday
+        return adsCol.updateOne(
+          { _id },
+          {
+            $push: {
+              history: {
+                timestamp: isoDate(),
+                impressions: impressionsToday,
+                clicks: clicksToday,
+                earnings
+              }
+            },
+            $set: {
+              impressionsToday: 0,
+              clicksToday: 0
             }
-          },
-          $set: {
-            impressionsToday: 0,
-            clicksToday: 0
           }
-        }
-      )
-    )
-  );
+        );
+      })
+    );
+    // update referrers history object with todays stats
+    const refs = await refsCol
+      .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
+      .toArray();
 
-  await statsCol.updateOne(
-    {},
-    {
-      $inc: {
-        totalImpressions: totalImpressionsToday,
-        totalClicks: totalClicksToday
-      },
-      $push: {
-        history: {
-          timestamp: isoDate(),
-          impressions: totalImpressionsToday,
-          clicks: totalClicksToday
+    await Promise.all(
+      refs.map(({ _id, clicksToday, impressionsToday }) => {
+        const earnings = clicksToday * earningsPerClick;
+        return refsCol.updateOne(
+          { _id },
+          {
+            $push: {
+              history: {
+                timestamp: isoDate(),
+                impressions: impressionsToday,
+                clicks: clicksToday,
+                earnings
+              }
+            },
+            $set: {
+              impressionsToday: 0,
+              clicksToday: 0
+            }
+          }
+        );
+      })
+    );
+
+    await statsCol.updateOne(
+      {},
+      {
+        $inc: {
+          totalImpressions: totalImpressionsToday,
+          totalClicks: totalClicksToday
+        },
+        $push: {
+          history: {
+            timestamp: isoDate(),
+            impressions: totalImpressionsToday,
+            clicks: totalClicksToday,
+            earningsPerClick,
+            sponsoredAds: sponsorCount
+          }
         }
       }
-    }
-  );
+    );
+  } catch (err) {
+    console.error('error with stats');
+  }
 }
-const agenda = new Agenda({ db: { address: url } });
-
-agenda.define('record day stats', async (job, done) => {
-  console.log('recording day stats');
-  recordDayStats();
-});
 
 export async function recordStats() {
-  console.log('starting agenda');
-  agenda.on('ready', async () => {
-    await agenda.start();
-    await agenda.every('0 0 * * *', 'record day stats');
-  });
+  console.log('scheduling');
+  const everyMidnight = '0 0 * * *';
+  cron.schedule(everyMidnight, recordDayStats);
 }

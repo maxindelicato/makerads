@@ -7,7 +7,7 @@ import url from 'url';
 import path from 'path';
 import io from '@pm2/io';
 
-import { connect, organiseSponsors, recordDayStats } from './db';
+import { connect, organiseSponsors, recordStats } from './db';
 import adsApi from './rest/ads';
 import referrersApi from './rest/referrers';
 import statsApi from './rest/stats';
@@ -45,6 +45,7 @@ const App = {
     await connect();
     console.info('sorting sponsors');
     await organiseSponsors();
+    await recordStats();
     listen = server.listen(1234);
     console.info('server started');
   },
