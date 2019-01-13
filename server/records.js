@@ -111,8 +111,17 @@ async function updateRecords(ids) {
 
 // insert a record into mongo
 const insert = async fields => {
-  const { Image, Name, Email, URL, Duration, Label, Paid, Sponsored } = fields;
-  console.log(`inserting ${URL}`);
+  const {
+    Image,
+    Name,
+    Email,
+    URL,
+    Duration,
+    Label,
+    Paid,
+    Sponsored,
+    Expires
+  } = fields;
   if (!Name) return null;
   // fetch image
   const image = await fetchImage(Image[0].url);
@@ -124,7 +133,8 @@ const insert = async fields => {
     duration: Duration,
     labelPosition: Label,
     sponsored: Sponsored,
-    paidAt: Paid
+    paidAt: Paid,
+    sponsoredEnds: Expires
   };
   try {
     const col = await db().collection('ads');
@@ -142,7 +152,17 @@ const insert = async fields => {
 };
 
 const update = async fields => {
-  const { Image, Name, Email, URL, Duration, Label, Paid, Sponsored } = fields;
+  const {
+    Image,
+    Name,
+    Email,
+    URL,
+    Duration,
+    Label,
+    Paid,
+    Sponsored,
+    Expires
+  } = fields;
   console.log(`inserting ${URL}`);
   if (!Name) return null;
   // fetch image
@@ -155,7 +175,8 @@ const update = async fields => {
     duration: Duration,
     labelPosition: Label,
     sponsored: Sponsored,
-    paidAt: Paid
+    paidAt: Paid,
+    sponsoredEnds: Expires
   };
   try {
     const col = await db().collection('ads');
