@@ -1,4 +1,4 @@
-var stripe = require('stripe')('sk_live_weApCf0KXuIxrkEyulIRhFzc');
+var stripe = require('stripe')(config.stripeKey);
 
 async function doIt() {
   const { id } = await createCustomer({

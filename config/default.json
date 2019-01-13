@@ -4,5 +4,6 @@
     "port": 27017,
     "name": "makerads"
   },
-  "url": "http://local.makerads.xyz"
+  "url": "http://local.makerads.xyz",
+  "stripeKey": "$STRIPE_KEY"
 }
