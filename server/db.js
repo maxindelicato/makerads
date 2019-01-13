@@ -270,6 +270,17 @@ export async function getStats() {
   };
 }
 
+export async function endSponsorships() {
+  console.log('checking sponsors');
+  const adsCol = await connection.collection('ads');
+  await adsCol.updateMany(
+    { sponsoredEnds: { $gt: new Date() } },
+    { $set: { sponsored: false } },
+    { multi: true }
+  );
+  return organiseSponsors();
+}
+
 export async function recordDayStats() {
   console.log('recording day stats');
   try {
@@ -300,7 +311,7 @@ export async function recordDayStats() {
         totalClicksToday = totalClicksToday + clicksToday;
         totalImpressionsToday = totalImpressionsToday + impressionsToday;
         let earnings = sponsored ? 0 : clicksToday * earningsPerClick;
-        if (isNaN(earnings)) {
+        if (isNaN(earnings) || earnings === Number.POSITIVE_INFINITY) {
           earnings = 0;
         }
         return adsCol.updateOne(
@@ -362,7 +373,10 @@ export async function recordDayStats() {
             timestamp: isoDate(),
             impressions: totalImpressionsToday,
             clicks: totalClicksToday,
-            earningsPerClick,
+            earningsPerClick:
+              earningsPerClick === Number.POSITIVE_INFINITY
+                ? 0
+                : earningsPerClick,
             sponsoredAds: sponsorCount
           }
         }
@@ -375,6 +389,9 @@ export async function recordDayStats() {
 
 export async function recordStats() {
   console.log('scheduling');
-  const everyMidnight = '0 0 * * *';
-  cron.schedule(everyMidnight, recordDayStats);
+  const everyMidnight = '*/1 * * * *';
+  cron.schedule(everyMidnight, async () => {
+    await recordDayStats();
+    await endSponsorships();
+  });
 }

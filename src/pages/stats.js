@@ -16,7 +16,17 @@ export default () => {
   return (
     <Layout>
       <SEO />
-      <div className="stats" />
+      <div className="stats">
+        <div className="stats-header">
+          <div className="header-title">
+            To help our sponsors make an informed choice, all of our metrics are
+            public.
+          </div>
+          <div className="ad-select">
+            <input name="ad-url" />
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };
