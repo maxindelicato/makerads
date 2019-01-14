@@ -298,22 +298,13 @@ export async function recordDayStats() {
     let totalImpressionsToday = 0;
     // update ads history object with todays stats
     const ads = await adsCol
-      .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1, sponsored: 1 })
+      .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
       .toArray();
 
-    const totalClicks = ads.reduce(
-      (total, ad) => total + (ad.sponsored ? 0 : ad.clicksToday),
-      0
-    );
-    let earningsPerClick = sponsorCost / totalClicks;
     await Promise.all(
-      ads.map(({ _id, clicksToday, impressionsToday, sponsored }) => {
+      ads.map(({ _id, clicksToday, impressionsToday }) => {
         totalClicksToday = totalClicksToday + clicksToday;
         totalImpressionsToday = totalImpressionsToday + impressionsToday;
-        let earnings = sponsored ? 0 : clicksToday * earningsPerClick;
-        if (isNaN(earnings) || earnings === Number.POSITIVE_INFINITY) {
-          earnings = 0;
-        }
         return adsCol.updateOne(
           { _id },
           {
@@ -321,8 +312,7 @@ export async function recordDayStats() {
               history: {
                 timestamp: isoDate(),
                 impressions: impressionsToday,
-                clicks: clicksToday,
-                earnings
+                clicks: clicksToday
               }
             },
             $set: {
@@ -338,9 +328,16 @@ export async function recordDayStats() {
       .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
       .toArray();
 
+    // dont include clicks on makerads.xyz
+    const totalClicks = refs.reduce(
+      (total, r) => total + (r.referrer === 'makerads.xyz' ? 0 : r.clicksToday),
+      0
+    );
+    let earningsPerClick = sponsorCost / totalClicks;
+
     await Promise.all(
       refs.map(({ _id, clicksToday, impressionsToday }) => {
-        const earnings = clicksToday * earningsPerClick;
+        const earnings = clicksToday === 0 ? 0 : clicksToday * earningsPerClick;
         return refsCol.updateOne(
           { _id },
           {
@@ -389,7 +386,7 @@ export async function recordDayStats() {
 
 export async function recordStats() {
   console.log('scheduling');
-  const everyMidnight = '*/1 * * * *';
+  const everyMidnight = '0 0 * * *';
   cron.schedule(everyMidnight, async () => {
     await recordDayStats();
     await endSponsorships();

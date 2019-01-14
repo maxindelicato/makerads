@@ -23,7 +23,7 @@
   "scripts": {
     "scp": "scp makerads.tar.gz staging:/var/www/makerads",
     "tar": "tar cf makerads.tar.gz public build config index.js package.json",
-    "deploy": "NODE_ENV=production npm run build && npm run client:build && npm run tar && npm run scp",
+    "deploy": "NODE_ENV=production npm run build && npm run tar && npm run scp",
     "build": "babel -d ./build ./server",
     "dev": "NODE_ENV=development node --inspect index.js",
     "seed": "NODE_ENV=development babel-node ./scripts/seed.js",
