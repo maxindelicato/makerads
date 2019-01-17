@@ -1,4 +1,5 @@
-import { MongoClient, Logger, ObjectID } from 'mongodb';
+import { Logger, MongoClient, ObjectID } from 'mongodb';
+
 import config from 'getconfig';
 import counter from 'sliding-window-counter';
 import cron from 'node-cron';
@@ -333,8 +334,9 @@ export async function recordDayStats() {
       (total, r) => total + (r.referrer === 'makerads.xyz' ? 0 : r.clicksToday),
       0
     );
+    console.log('total clicks today', totalClicks);
     let earningsPerClick = sponsorCost / totalClicks;
-
+    console.log('total earnings per click', earningsPerClick);
     await Promise.all(
       refs.map(({ _id, clicksToday, impressionsToday }) => {
         const earnings = clicksToday === 0 ? 0 : clicksToday * earningsPerClick;

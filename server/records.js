@@ -1,7 +1,8 @@
+import db, { isoDate } from './db';
+
 import Airtable from 'airtable';
 import { airtable as airTableConf } from 'getconfig';
 
-import db, { isoDate } from './db';
 const request = require('request').defaults({ encoding: null });
 
 const base = new Airtable({ apiKey: airTableConf.apiKey }).base(
@@ -134,7 +135,9 @@ const insert = async fields => {
     labelPosition: Label,
     sponsored: Sponsored,
     paidAt: Paid,
-    sponsoredEnds: Expires
+    sponsoredEnds: Expires,
+    clicksToday: 0,
+    impressionsToday: 0
   };
   try {
     const col = await db().collection('ads');
