@@ -1,4 +1,5 @@
 let App;
+require('dotenv').config();
 if (process.env.NODE_ENV !== 'development') {
   console.info('starting production api');
   require('@babel/polyfill');

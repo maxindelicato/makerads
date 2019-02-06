@@ -1,16 +1,16 @@
-import express from 'express';
-import httpProxy from 'http-proxy';
-import http from 'http';
-import config from 'getconfig';
-import helmet from 'helmet';
-import url from 'url';
-import path from 'path';
-import io from '@pm2/io';
-
 import { connect, organiseSponsors, recordStats } from './db';
+
 import adsApi from './rest/ads';
+import config from 'getconfig';
+import express from 'express';
+import helmet from 'helmet';
+import http from 'http';
+import httpProxy from 'http-proxy';
+import io from '@pm2/io';
+import path from 'path';
 import referrersApi from './rest/referrers';
 import statsApi from './rest/stats';
+import url from 'url';
 
 const app = express();
 const server = http.createServer(app);
@@ -70,5 +70,10 @@ if (process.env.NODE_ENV !== 'development') {
     }
   });
 }
+
+// (async () => {
+//   const fetchRecords = require('./records').default;
+//   await fetchRecords({ reset: true });
+// })();
 
 export default App;

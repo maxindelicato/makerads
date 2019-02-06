@@ -129,6 +129,7 @@ export async function getRandom({ referrer } = {}) {
         }
       );
 
+      console.log('skip', skipNumber);
       const random = await ads
         .find(query)
         .skip(skipNumber)

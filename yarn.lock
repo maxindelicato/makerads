@@ -10854,6 +10854,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
+webp-converter@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/webp-converter/-/webp-converter-2.2.2.tgz#fac9f1f8dd4983c88833b1db9b6eb03e23ecdd8e"
+
 webpack-dev-middleware@3.4.0, webpack-dev-middleware@^3.0.1:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-3.4.0.tgz#1132fecc9026fd90f0ecedac5cbff75d1fb45890"

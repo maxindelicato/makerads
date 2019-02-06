@@ -18,7 +18,8 @@
     "node-cron": "^2.0.3",
     "request": "^2.88.0",
     "sliding-window-counter": "^0.2.4",
-    "stripe": "^6.20.0"
+    "stripe": "^6.20.0",
+    "webp-converter": "^2.2.2"
   },
   "scripts": {
     "scp": "scp makerads.tar.gz staging:/var/www/makerads",

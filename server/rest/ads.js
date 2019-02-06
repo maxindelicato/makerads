@@ -1,11 +1,14 @@
-import url from 'url';
-import rediscache from 'express-redis-cache';
-import io from '@pm2/io';
-
 import ad, { jsonAd } from '../services/ad-service';
 import db, { getAd } from '../db';
 import { trackClick, trackImpression } from '../utils/tracking';
 
+import fs from 'fs';
+import io from '@pm2/io';
+import rediscache from 'express-redis-cache';
+import url from 'url';
+import webp from 'webp-converter';
+
+const tmpImageName = 'tmpimage';
 const cache = rediscache();
 
 export default app => {
@@ -19,7 +22,7 @@ export default app => {
     } else {
       a = await ad();
     }
-    res.send(a);
+    return res.send(a);
   });
 
   app.get('/ad.json', async (req, res) => {
@@ -51,8 +54,12 @@ export default app => {
   app.get('/:id/image', async (req, res) => {
     try {
       const adId = req.params.id;
+      const acceptsWebp = req.accepts('image/webp');
       const { ref: referrer } = req.query;
-      const cachedResponse = await getFromCache(req.url);
+      const cachedResponse = await getFromCache(
+        req.path,
+        acceptsWebp ? 'webp' : 'png'
+      );
       let imageData;
 
       if (cachedResponse) {
@@ -60,46 +67,77 @@ export default app => {
       } else {
         const { image } = await getAd(adId);
         imageData = image;
-        addToCache(req.url, imageData);
+        addToCache(req.path, imageData);
       }
-
       const img = new Buffer(imageData, 'base64');
       trackImpression(adId, referrer);
       res.writeHead(200, {
-        'Content-Type': 'image/png',
+        'Content-Type': acceptsWebp ? 'image/webp' : 'image/png',
         'Content-Length': img.length
       });
-      res.end(img);
+      return res.end(img);
     } catch (err) {
       console.error(err);
-      res.status(500).send(err);
+      return res.status(500).send(err);
     }
   });
 };
 
-function getFromCache(key) {
-  return new Promise((res, rej) => {
-    cache.get(key, (err, entries) => {
+function getFromCache(key, type) {
+  const typedKey = `${key}-${type}`;
+  return new Promise((resolve, reject) => {
+    cache.get(typedKey, (err, entries) => {
       if (err) {
-        return rej(err);
+        return reject(err);
       }
       if (entries.length) {
-        return res(entries[0].body);
+        return resolve(entries[0].body);
       }
-      return res(null);
+      return resolve(null);
     });
   });
 }
 
 function addToCache(key, img) {
-  return new Promise((res, rej) => {
-    cache.add(key, img, { type: 'image/png' }, (err, out) => {
-      if (err) {
-        console.error(err);
-        return rej(err);
+  return new Promise((resolve, reject) => {
+    fs.writeFileSync(`${tmpImageName}.png`, img, 'base64');
+    const { size: originalSize } = fs.statSync(`${tmpImageName}.png`);
+    webp.cwebp(
+      `${tmpImageName}.png`,
+      'output.webp',
+      '-q 80',
+      async (status, error) => {
+        if (error) {
+          console.log(error);
+          return reject(error);
+        }
+        const compressedImg = fs.readFileSync('output.webp');
+        const { size: newSize } = fs.statSync('output.webp');
+
+        console.log(
+          `saved ${100 - (newSize / originalSize) * 100}% of image size`
+        );
+
+        await Promise.all([
+          new Promise((res, rej) => {
+            cache.add(`${key}-png`, img, { type: 'image/png' }, (err, out) => {
+              if (err) {
+                console.error(err);
+                return rej(err);
+              }
+              res(out);
+            });
+          }),
+          cache.add(`${key}-webp`, img, { type: 'image/webp' }, (err, out) => {
+            if (err) {
+              console.error(err);
+              return rej(err);
+            }
+            resolve(out);
+          })
+        ]).then(resolve, reject);
       }
-      res(out);
-    });
+    );
   });
 }
 function removeFromCache(key) {

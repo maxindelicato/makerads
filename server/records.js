@@ -2,6 +2,7 @@ import db, { isoDate } from './db';
 
 import Airtable from 'airtable';
 import { airtable as airTableConf } from 'getconfig';
+import fs from 'fs';
 
 const request = require('request').defaults({ encoding: null });
 
@@ -12,6 +13,7 @@ const base = new Airtable({ apiKey: airTableConf.apiKey }).base(
 // used on LIVE to sync data with the AirTable
 // base, so that users can submit ads easily
 async function sync({ reset } = {}) {
+  console.log('syncing');
   try {
     const ids = await getRecords({ reset });
     const updateIds = await updateExistingRecords();
@@ -35,14 +37,20 @@ async function getRecords({ reset = false } = {}) {
         filterByFormula: reset ? 'Approved' : 'AND(NOT(Inserted), Approved)'
       })
       .eachPage(
-        function page(records, fetchNextPage) {
+        async function page(records, fetchNextPage) {
           if (!records.length) {
             console.log('no new ads');
           }
-          records.forEach(function(record) {
-            insert(record.fields);
-            recordIds = [...recordIds, record.id];
-          });
+          await records.reduce(async (p, record) => {
+            await p;
+            try {
+              await insert(record.fields);
+              recordIds = [...recordIds, record.id];
+            } catch (err) {
+              console.error('failed to insert image');
+              console.error(err);
+            }
+          }, Promise.resolve());
           fetchNextPage();
         },
         function done(err) {
@@ -65,14 +73,20 @@ async function updateExistingRecords() {
         filterByFormula: 'Update'
       })
       .eachPage(
-        function page(records, fetchNextPage) {
+        async function page(records, fetchNextPage) {
           if (!records.length) {
             console.log('no new ads to update');
           }
-          records.forEach(function(record) {
-            update(record.fields);
-            recordIds = [...recordIds, record.id];
-          });
+          await records.reduce(async (p, record) => {
+            await p;
+            try {
+              await update(record.fields);
+              recordIds = [...recordIds, record.id];
+            } catch (err) {
+              console.error('failed to insert image');
+              console.error(err);
+            }
+          }, Promise.resolve());
           fetchNextPage();
         },
         function done(err) {
@@ -209,7 +223,6 @@ const fetchImage = async uri => {
       if (err || res.statusCode !== 200) {
         return reject(err);
       }
-      console.log(uri);
       const data = new Buffer(body).toString('base64');
       return resolve(data);
     });
@@ -220,5 +233,5 @@ const fetchImage = async uri => {
 // even if has been inserted before.
 // used to reset the local database to match the airtable
 export default async function fetchRecords({ reset } = {}) {
-  return sync({ reset });
+  return sync({ reset: true });
 }

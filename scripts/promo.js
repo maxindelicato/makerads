@@ -1,8 +1,9 @@
+var config = require('getconfig');
 var stripe = require('stripe')(config.stripeKey);
 
 async function doIt() {
   const { id } = await createCustomer({
-    email: 'mj@erxes.io',
+    email: 'leon@slk.media',
     currency: 'usd'
   });
   const payment = await createPayment({ customerId: id, productPrice: 2500 });
