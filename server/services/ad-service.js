@@ -23,10 +23,6 @@ export async function jsonAd({ referrer } = {}) {
 export default async ({ referrer } = {}) => {
   try {
     let ad = await getAd(null, { referrer });
-    if (!ad) {
-      ad = await getAd(null, { referrer });
-    }
-
     let url = `${config.url}/${ad._id}/redirect`;
     let imgSrc = `${config.url}/${ad._id}/image`;
     if (referrer) {
@@ -91,6 +87,7 @@ export default async ({ referrer } = {}) => {
       </html>
     `;
   } catch (err) {
+    console.error('failed to serve ad');
     console.error(err);
     return `
     <html>

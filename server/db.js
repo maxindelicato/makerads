@@ -70,11 +70,17 @@ let queue = [];
 let fetching = false;
 let fetchingPromise;
 export async function getRandom({ referrer } = {}) {
-  if (fetching) {
-    await fetchingPromise;
-    return getRandom({ referrer });
+  try {
+    if (fetching) {
+      await fetchingPromise;
+      return getRandom({ referrer });
+    }
+    fetching = true;
+  } catch (err) {
+    console.error('pending ad error');
+    console.error(err);
+    throw err;
   }
-  fetching = true;
   fetchingPromise = new Promise(async (resolve, reject) => {
     try {
       const col = await connection.collection('counter');
@@ -138,6 +144,8 @@ export async function getRandom({ referrer } = {}) {
       const output = await random.toArray();
       resolve(output[0]);
     } catch (err) {
+      console.error('random ad error');
+      console.error(err);
       reject(err);
     } finally {
       fetching = false;

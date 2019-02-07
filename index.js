@@ -12,3 +12,14 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 App.start();
+
+process.on('unhandledRejection', function(reason, p) {
+  console.error('Unhandled rejection');
+  console.error(reason);
+});
+
+process.on('uncaughtException', function(error) {
+  console.error('Uncaught exception');
+  console.error(reason);
+  process.exit(1);
+});

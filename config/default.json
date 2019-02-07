@@ -5,7 +5,6 @@
     "name": "makerads"
   },
   "url": "http://local.makerads.xyz",
-  "stripeKey": "$STRIPE_KEY",
   "airtable": {
     "apiKey": "$AIRTABLE_API_KEY",
     "base": "$AIRTABLE_BASE_ID"
