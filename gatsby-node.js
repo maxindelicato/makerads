@@ -9,8 +9,11 @@
 exports.onCreatePage = async ({ page, actions }) => {
   const { createPage } = actions;
   console.log('PATH', page.path);
-  if (page.path.match(/^\/stats/)) {
-    page.matchPath = '/stats/*';
+  if (page.path.match(/^\/stats\/ads/)) {
+    page.matchPath = '/stats/ads/*';
+    createPage(page);
+  } else if (page.path.match(/^\/stats\/referrers/)) {
+    page.matchPath = '/stats/referrers/*';
     createPage(page);
   }
 };

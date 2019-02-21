@@ -1,9 +1,9 @@
+import { getStats, getStatsForAdWithUrl } from '../db';
+
 import { Router } from 'express';
 
-import { getStats } from '../db';
-
-const referrers = new Router();
-referrers.get('/stats', async (req, res) => {
+const stats = new Router();
+stats.get('/stats', async (req, res) => {
   try {
     const s = await getStats();
     res.send(s);
@@ -13,4 +13,15 @@ referrers.get('/stats', async (req, res) => {
   }
 });
 
-export default referrers;
+stats.get('/stats/ad', async (req, res) => {
+  try {
+    const { url } = req.query;
+    const s = await getStatsForAdWithUrl(url);
+    res.send(s);
+  } catch (err) {
+    console.error(err);
+    res.status(500);
+  }
+});
+
+export default stats;

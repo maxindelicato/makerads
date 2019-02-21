@@ -280,6 +280,19 @@ export async function getStats() {
   };
 }
 
+export async function getStatsForAdWithUrl(url) {
+  try {
+    const col = await connection.collection('ads');
+    const ad = col.findOne({ url: { $regex: new RegExp(`${url}$`) } });
+    return ad;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function getStatsForReferrerWithUrl(url) {}
+
 export async function endSponsorships() {
   console.log('checking sponsors');
   const adsCol = await connection.collection('ads');

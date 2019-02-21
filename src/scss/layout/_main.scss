@@ -4,7 +4,7 @@
 
 .body-wrap {
   background: color(bg, 1);
-  overflow: hidden;
+  overflow-x: hidden;
   /* Sticky footer */
   display: flex;
   flex-direction: column;
