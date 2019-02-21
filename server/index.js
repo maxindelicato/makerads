@@ -26,6 +26,11 @@ adsApi(app);
 if (process.env.NODE_ENV === 'development') {
   console.info('index: serving dev assets');
   const proxy = httpProxy.createProxyServer();
+  app.all('/stats/:path*?', (req, res) => {
+    proxy.web(req, res, {
+      target: 'http://localhost:8000'
+    });
+  });
   app.all('/*', (req, res) => {
     proxy.web(req, res, {
       target: 'http://localhost:8000'

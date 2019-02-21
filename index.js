@@ -20,6 +20,6 @@ process.on('unhandledRejection', function(reason, p) {
 
 process.on('uncaughtException', function(error) {
   console.error('Uncaught exception');
-  console.error(reason);
+  console.error(error);
   process.exit(1);
 });
