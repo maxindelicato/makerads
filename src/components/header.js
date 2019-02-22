@@ -2,7 +2,7 @@ import { Link } from 'gatsby';
 import React from 'react';
 import logo from '../images/logo.png';
 
-const Header = ({ siteTitle }) => (
+const Header = ({ title }) => (
   <header className="site-header">
     <div className="container">
       <div className="site-header-inner">
@@ -10,7 +10,10 @@ const Header = ({ siteTitle }) => (
           <h1 className="m-0">
             <Link className="header-link" to="/">
               <img className="header-logo" src={logo} alt="logo" />
-              MakerAds
+              <span className="header-main">
+                MakerAds
+                {title ? <span className="lead-title">{title}</span> : null}
+              </span>
             </Link>
           </h1>
         </div>

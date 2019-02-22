@@ -106,7 +106,7 @@ export default route => {
   }, []);
 
   return (
-    <Layout footer={false}>
+    <Layout footer={false} title="Ad Stats">
       {/* <SEO /> */}
       <main>
         <div className="stats">
@@ -167,7 +167,7 @@ function Content({ ad, url }) {
       />
       <div className="stats-stats">
         <h3 className="stats-url">
-          <a href={ad.url}>{ad.url}</a>
+          <a href={`${ad.url}?ref=makerads`}>{ad.url}</a>
         </h3>
         <div className="chart-container">
           <h4 className="chart-title">

@@ -6,7 +6,7 @@ import Header from './header';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const Layout = ({ children, footer = true }) => (
+const Layout = ({ children, title, footer = true }) => (
   <StaticQuery
     query={graphql`
       query SiteTitleQuery {
@@ -19,7 +19,7 @@ const Layout = ({ children, footer = true }) => (
     `}
     render={data => (
       <div className="body-wrap boxed-container">
-        <Header />
+        <Header title={title} />
 
         {children}
         {footer ? (

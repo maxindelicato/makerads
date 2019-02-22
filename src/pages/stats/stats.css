@@ -130,3 +130,16 @@
   text-align: center;
   margin-top: 20px;
 }
+
+.header-main {
+  display: flex;
+  align-items: flex-end;
+}
+
+.lead-title {
+  font-size: 20px;
+  margin-left: 20px;
+  opacity: 0.8px;
+  color: #5f7384;
+  line-height: 40px;
+}

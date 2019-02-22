@@ -291,7 +291,16 @@ export async function getStatsForAdWithUrl(url) {
   }
 }
 
-export async function getStatsForReferrerWithUrl(url) {}
+export async function getStatsForReferrerWithUrl(url) {
+  try {
+    const col = await connection.collection('referrers');
+    const ad = col.findOne({ referrer: { $regex: new RegExp(`${url}$`) } });
+    return ad;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 export async function endSponsorships() {
   console.log('checking sponsors');
