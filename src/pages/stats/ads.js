@@ -93,8 +93,10 @@ export default route => {
   const { search } = route.location;
   const [ad, setAd] = useState(null);
   const [loading, setLoading] = useState(true);
-  const url = new URLSearchParams(search).get('url');
-
+  let url;
+  if (typeof window !== 'undefined') {
+    url = new URLSearchParams(search).get('url');
+  }
   useEffect(() => {
     fetchStatsForAd(url)
       .then(a => {
@@ -121,7 +123,7 @@ export default route => {
               <div className="stats-loading">Loading ad stats...</div>
             ) : null}
 
-            <Content ad={ad} url={url} />
+            <Content loading={loading} ad={ad} url={url} />
           </>
         </div>
       </main>
@@ -129,10 +131,11 @@ export default route => {
   );
 };
 
-function Content({ ad, url }) {
-  if (!ad)
+function Content({ ad, url, loading }) {
+  if (loading) return null;
+  if (!ad) {
     return <div className="stats-loading">{`No ad found with url ${url}`}</div>;
-
+  }
   const chartRef = useRef(null);
   const { history } = ad;
 

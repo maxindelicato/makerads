@@ -93,8 +93,10 @@ export default route => {
   const { search } = route.location;
   const [referrer, setReferrer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const url = new URLSearchParams(search).get('url');
-
+  let url;
+  if (typeof window !== 'undefined') {
+    url = new URLSearchParams(search).get('url');
+  }
   useEffect(() => {
     fetchStatsForReferrer(url)
       .then(a => {
@@ -120,8 +122,7 @@ export default route => {
             {loading ? (
               <div className="stats-loading">Loading referrer stats...</div>
             ) : null}
-
-            <Content referrer={referrer} url={url} />
+            <Content loading={loading} referrer={referrer} url={url} />
           </>
         </div>
       </main>
@@ -129,7 +130,8 @@ export default route => {
   );
 };
 
-function Content({ referrer, url }) {
+function Content({ referrer, url, loading }) {
+  if (loading) return null;
   if (!referrer)
     return (
       <div className="stats-loading">{`No referrer found with url ${url}`}</div>

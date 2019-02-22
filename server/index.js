@@ -27,7 +27,6 @@ if (process.env.NODE_ENV === 'development') {
   console.info('index: serving dev assets');
   const proxy = httpProxy.createProxyServer();
   app.all('/stats/ads/:url', (req, res) => {
-    console.log('redi', req.url);
     proxy.web(req, res, {
       target: 'http://localhost:8000'
     });
