@@ -3,6 +3,7 @@ import { Logger, MongoClient, ObjectID } from 'mongodb';
 import config from 'getconfig';
 import counter from 'sliding-window-counter';
 import cron from 'node-cron';
+import isSameDay from 'date-fns/is_same_day';
 
 const impressionsCount = counter(1000 * 60);
 const clicksCount = counter(1000 * 60);
@@ -209,16 +210,44 @@ export async function addReferrerClick(ref) {
   );
 }
 
+export async function getAds() {
+  try {
+    const ads = await connection.collection('ads');
+    return ads
+      .find({})
+      .project({ image: 1, url: 1, clicks: 1, impressions: 1, sponsored: 1 })
+      .toArray();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function getSponsoredAds() {
+  try {
+    const ads = await connection.collection('ads');
+    const sponsors = await ads
+      .find({
+        sponsored: true
+      })
+      .toArray();
+    return sponsors;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export async function getReferrers({
   skip = 0,
-  limit = 5,
+  limit = 100,
   sortBy = 'impressions'
 } = {}) {
   try {
     const col = await connection.collection('referrers');
     return col
       .find({ referrer: { $regex: '^(?!local.)' } })
-      .project({ _id: 0, createdAt: 0, lastUpdatedAt: 0 })
+      .project({ createdAt: 0, lastUpdatedAt: 0 })
       .sort({ impressions: -1 })
       .skip(skip)
       .limit(limit)
@@ -267,23 +296,71 @@ export async function organiseSponsors() {
   );
 }
 
+export async function getStatsForReferrers() {
+  const referrers = await getReferrers();
+  return referrers;
+}
+
 export async function getStats() {
-  const referrers = await getReferrers({ limit: 10 });
-  const [totals] = await getTotals();
-  const { clicks, impressions } = totals;
+  const counterCol = await connection.collection('counter');
+  const sponsoredAds = await getSponsoredAds();
+  const ads = await getAds();
+  const {
+    totalSponsoredClicks,
+    totalSponsoredImpressions,
+    sponsoredHistory
+  } = sponsoredAds.reduce(
+    (out, ad) => {
+      const { history } = ad;
+      const sponsoredHistory = history.map(h => {
+        const ehi = out.sponsoredHistory.find(({ timestamp }) => {
+          return isSameDay(timestamp, h.timestamp);
+        });
+        return {
+          ...h,
+          clicks: h.clicks + (ehi ? ehi.clicks : 0),
+          impressions: h.impressions + (ehi ? ehi.impressions : 0)
+        };
+      });
+
+      return {
+        totalSponsoredClicks: ad.clicks + out.totalSponsoredClicks,
+        totalSponsoredImpressions:
+          ad.impressions + out.totalSponsoredImpressions,
+        sponsoredHistory
+      };
+    },
+    {
+      totalSponsoredClicks: 0,
+      totalSponsoredImpressions: 0,
+      sponsoredHistory: []
+    }
+  );
+
+  const {
+    history,
+    totalClicks,
+    totalImpressions,
+    sponsorQuantity,
+    adQuantity
+  } = await counterCol.findOne({});
   return {
-    referrers,
-    totalClicks: clicks,
-    totalImpressions: impressions,
-    impressionsPerMin: impressionsCount(),
-    clicksPerMin: clicksCount()
+    history,
+    totalClicks,
+    totalImpressions,
+    sponsorQuantity,
+    adQuantity,
+    totalSponsoredClicks,
+    totalSponsoredImpressions,
+    sponsoredHistory,
+    ads
   };
 }
 
-export async function getStatsForAdWithUrl(url) {
+export async function getStatsForAdWithId(id) {
   try {
     const col = await connection.collection('ads');
-    const ad = col.findOne({ url: { $regex: new RegExp(`${url}$`) } });
+    const ad = await col.findOne({ _id: new ObjectID(id) });
     return ad;
   } catch (err) {
     console.log(err);
@@ -291,10 +368,21 @@ export async function getStatsForAdWithUrl(url) {
   }
 }
 
-export async function getStatsForReferrerWithUrl(url) {
+export async function getStatsForAdWithUrl(url) {
+  try {
+    const col = await connection.collection('ads');
+    const ad = await col.findOne({ url: { $regex: new RegExp(`${url}$`) } });
+    return ad;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function getStatsForReferrerWithId(id) {
   try {
     const col = await connection.collection('referrers');
-    const ad = col.findOne({ referrer: { $regex: new RegExp(`${url}$`) } });
+    const ad = col.findOne({ _id: new ObjectID(id) });
     return ad;
   } catch (err) {
     console.log(err);

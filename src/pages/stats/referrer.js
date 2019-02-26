@@ -13,8 +13,8 @@ import startOfDay from 'date-fns/start_of_day';
 import startOfMonth from 'date-fns/start_of_month';
 import { useAsync } from 'react-use';
 
-const fetchStatsForReferrer = url => {
-  return fetch(`/api/stats/referrer?url=${url}`)
+const fetchStatsForReferrer = id => {
+  return fetch(`/api/stats/referrer?id=${id}`)
     .then(res => res.json())
     .catch(err => console.error(err));
 };
@@ -93,12 +93,12 @@ export default route => {
   const { search } = route.location;
   const [referrer, setReferrer] = useState(null);
   const [loading, setLoading] = useState(true);
-  let url;
+  let id;
   if (typeof window !== 'undefined') {
-    url = new URLSearchParams(search).get('url');
+    id = new URLSearchParams(search).get('id');
   }
   useEffect(() => {
-    fetchStatsForReferrer(url)
+    fetchStatsForReferrer(id)
       .then(a => {
         if (a) {
           setReferrer(a);
@@ -114,15 +114,20 @@ export default route => {
         <div className="stats">
           <div className="stats-header">
             <div className="header-title">
-              To help our sponsors make an informed choice, all of our metrics
-              are public.
+              <p>
+                To help our sponsors make an informed choice, all of our metrics
+                are public.
+              </p>
+              <p>
+                <Link to="/stats/referrers">Back to referrer list</Link>
+              </p>
             </div>
           </div>
           <>
             {loading ? (
               <div className="stats-loading">Loading referrer stats...</div>
             ) : null}
-            <Content loading={loading} referrer={referrer} url={url} />
+            <Content loading={loading} referrer={referrer} />
           </>
         </div>
       </main>
@@ -130,12 +135,10 @@ export default route => {
   );
 };
 
-function Content({ referrer, url, loading }) {
+function Content({ referrer, loading }) {
   if (loading) return null;
   if (!referrer)
-    return (
-      <div className="stats-loading">{`No referrer found with url ${url}`}</div>
-    );
+    return <div className="stats-loading">{`No referrer found`}</div>;
 
   const chartRef = useRef(null);
   const { history } = referrer;
@@ -150,7 +153,7 @@ function Content({ referrer, url, loading }) {
   const thisMonthStart = startOfMonth(today);
   const { monthlyClicks, monthlyImpressions, monthlyEarnings } = history.reduce(
     (out, day) => {
-      if (isAfter(thisMonthStart, new Date(day.timestamp))) {
+      if (isAfter(new Date(day.timestamp), thisMonthStart)) {
         return {
           monthlyClicks: out.monthlyClicks + day.clicks,
           monthlyImpressions: out.monthlyImpressions + day.impressions,
@@ -168,7 +171,9 @@ function Content({ referrer, url, loading }) {
     <div className="stats-content" style={{ padding: '180px 0 0 0' }}>
       <div className="stats-stats">
         <h3 className="stats-url">
-          <a href={`${referrer.referrer}?ref=makerads`}>{referrer.referrer}</a>
+          <a href={`https://${referrer.referrer}?ref=makerads`}>
+            {referrer.referrer}
+          </a>
         </h3>
         <div className="chart-container">
           <h4 className="chart-title">

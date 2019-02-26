@@ -13,8 +13,8 @@ import startOfDay from 'date-fns/start_of_day';
 import startOfMonth from 'date-fns/start_of_month';
 import { useAsync } from 'react-use';
 
-const fetchStatsForAd = url => {
-  return fetch(`/api/stats/ad?url=${url}`)
+const fetchStatsForAd = id => {
+  return fetch(`/api/stats/ad?id=${id}`)
     .then(res => res.json())
     .catch(err => console.error(err));
 };
@@ -25,13 +25,20 @@ const lineColor2 = 'rgb(158, 87, 174)';
 function chart(ctx, stats) {
   if (!stats) return null;
 
+  const maxClicks = stats.reduce((m, s) => (s.clicks > m ? s.clicks : m), 0);
+  const maxImpressions = stats.reduce(
+    (m, s) => (s.impressions > m ? s.impressions : m),
+    0
+  );
+
   new Chart(ctx, {
     data: {
       datasets: [
         {
           label: 'Impressions',
           fill: true,
-          backgroundColor: 'rgba(246,246,246,0.3)',
+          yAxisID: 'yA',
+          // backgroundColor: 'rgba(246,246,246,0.3)',
           borderColor: 'rgba(255,255,255,0.6)',
           data: stats.map(d => ({
             x: startOfDay(d.timestamp),
@@ -41,7 +48,8 @@ function chart(ctx, stats) {
         {
           label: 'Clicks',
           fill: true,
-          backgroundColor: 'rgba(46,131,239,0.5)',
+          yAxisID: 'yB',
+          backgroundColor: 'rgba(46,131,239,0.2)',
           borderColor: 'rgba(46,131,239,0.8)',
           data: stats.map(d => ({
             x: startOfDay(d.timestamp),
@@ -73,13 +81,29 @@ function chart(ctx, stats) {
         ],
         yAxes: [
           {
+            id: 'yA',
             ticks: {
               beginAtZero: true,
-              precision: 0,
-              fontColor: 'rgba(246,246,246,0.5)'
+              precision: maxImpressions > 1000 ? 500 : 200,
+              stepSize: maxImpressions > 1000 ? 500 : 200,
+              fontColor: 'rgba(246,246,246,0.5)',
+              maxTicksLimit: 8
             },
             gridLines: {
               color: 'rgba(246,246,246,0.2)'
+            }
+          },
+          {
+            id: 'yB',
+            type: 'linear',
+            position: 'right',
+            gridLines: false,
+            ticks: {
+              beginAtZero: true,
+              max: maxClicks * 3,
+              stepSize: (maxClicks * 3) / 6,
+              min: 0,
+              fontColor: 'rgb(52, 129, 226)'
             }
           }
         ]
@@ -93,12 +117,12 @@ export default route => {
   const { search } = route.location;
   const [ad, setAd] = useState(null);
   const [loading, setLoading] = useState(true);
-  let url;
+  let id;
   if (typeof window !== 'undefined') {
-    url = new URLSearchParams(search).get('url');
+    id = new URLSearchParams(search).get('id');
   }
   useEffect(() => {
-    fetchStatsForAd(url)
+    fetchStatsForAd(id)
       .then(a => {
         if (a) {
           setAd(a);
@@ -114,8 +138,13 @@ export default route => {
         <div className="stats">
           <div className="stats-header">
             <div className="header-title">
-              To help our sponsors make an informed choice, all of our metrics
-              are public.
+              <p>
+                To help our sponsors make an informed choice, all of our metrics
+                are public.
+              </p>
+              <p>
+                <Link to="/stats">Back to stats</Link>
+              </p>
             </div>
           </div>
           <>
@@ -123,7 +152,7 @@ export default route => {
               <div className="stats-loading">Loading ad stats...</div>
             ) : null}
 
-            <Content loading={loading} ad={ad} url={url} />
+            <Content loading={loading} ad={ad} />
           </>
         </div>
       </main>
@@ -131,10 +160,10 @@ export default route => {
   );
 };
 
-function Content({ ad, url, loading }) {
+function Content({ ad, loading }) {
   if (loading) return null;
   if (!ad) {
-    return <div className="stats-loading">{`No ad found with url ${url}`}</div>;
+    return <div className="stats-loading">{`No ad found`}</div>;
   }
   const chartRef = useRef(null);
   const { history } = ad;
@@ -149,7 +178,7 @@ function Content({ ad, url, loading }) {
   const thisMonthStart = startOfMonth(today);
   const { monthlyClicks, monthlyImpressions } = history.reduce(
     (out, day) => {
-      if (isAfter(thisMonthStart, new Date(day.timestamp))) {
+      if (isAfter(new Date(day.timestamp), thisMonthStart)) {
         return {
           monthlyClicks: out.monthlyClicks + day.clicks,
           monthlyImpressions: out.monthlyImpressions + day.impressions
