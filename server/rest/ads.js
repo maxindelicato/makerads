@@ -2,6 +2,7 @@ import ad, { jsonAd } from '../services/ad-service';
 import db, { getAd } from '../db';
 import { trackClick, trackImpression } from '../utils/tracking';
 
+import fraudDetector from '../utils/fraud-detector';
 import fs from 'fs';
 import io from '@pm2/io';
 import rediscache from 'express-redis-cache';
@@ -14,7 +15,6 @@ const cache = rediscache();
 export default app => {
   // get random ad page
   app.get('/ad', async (req, res) => {
-    console.log('/ad');
     const referrer = req.header('Referer');
     let a;
     try {
@@ -45,13 +45,15 @@ export default app => {
     res.send(a);
   });
 
-  app.get('/:id/redirect', async (req, res) => {
-    console.log('/redirect');
+  app.get('/:id/redirect', fraudDetector, async (req, res) => {
     const adId = req.params.id;
     const { ref: referrer } = req.query;
+    const { ignoreClick } = res.locals;
     try {
       const { url } = await getAd(adId);
-      trackClick(adId, referrer);
+      if (!ignoreClick) {
+        trackClick(adId, referrer);
+      }
       return res.redirect(`${url}?ref=${referrer}`);
     } catch (err) {
       console.error(err);

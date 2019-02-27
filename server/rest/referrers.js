@@ -1,12 +1,11 @@
 import { Router } from 'express';
-
 import { getReferrers } from '../db';
 
 const referrers = new Router();
 referrers.get('/referrers', async (req, res) => {
   try {
     console.log('get referrers');
-    const refs = await getReferrers();
+    const refs = await getReferrers({ limit: 10 });
     res.send(refs);
   } catch (err) {
     console.error(err);

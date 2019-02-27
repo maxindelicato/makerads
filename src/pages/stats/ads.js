@@ -84,8 +84,8 @@ function chart(ctx, stats) {
             id: 'yA',
             ticks: {
               beginAtZero: true,
-              precision: maxImpressions > 1000 ? 500 : 200,
-              stepSize: maxImpressions > 1000 ? 500 : 200,
+              precision: 10,
+              stepSize: 10,
               fontColor: 'rgba(246,246,246,0.5)',
               maxTicksLimit: 8
             },
