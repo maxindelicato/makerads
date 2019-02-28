@@ -2,6 +2,7 @@ import '../scss/style.scss';
 
 import { StaticQuery, graphql } from 'gatsby';
 
+import Colin from './squarecat';
 import Header from './header';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,7 +19,8 @@ const Layout = ({ children, title, footer = true }) => (
       }
     `}
     render={data => (
-      <div className="body-wrap boxed-container">
+      <div id="main" className="body-wrap boxed-container">
+        <Colin />
         <Header title={title} />
 
         {children}
@@ -29,7 +31,7 @@ const Layout = ({ children, title, footer = true }) => (
                 <div className="brand footer-brand">
                   <a href="#">
                     <svg width="32" height="32" viewBox="0 0 32 32">
-                      <title>Ava</title>
+                      <title>MakerAds</title>
                       <defs>
                         <path
                           d="M32 16H16v16H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v14z"
@@ -70,7 +72,7 @@ const Layout = ({ children, title, footer = true }) => (
                   </a>
                 </div>
                 <div className="footer-copyright">
-                  &copy; 2018 Ava, all rights reserved
+                  &copy; 2019 Squarecat, all rights reserved
                 </div>
               </div>
             </div>
