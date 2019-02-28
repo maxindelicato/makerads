@@ -175,3 +175,4 @@ build/
 .vscode
 .env
 public
+.env.production
