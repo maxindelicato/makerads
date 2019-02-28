@@ -109,7 +109,7 @@ export default route => {
 
   return (
     <Layout footer={false} title="Referrer Stats">
-      {/* <SEO /> */}
+      <SEO />
       <main>
         <div className="stats">
           <div className="stats-header">
