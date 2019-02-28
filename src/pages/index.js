@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
 import { Link, StaticQuery, graphql } from 'gatsby';
+import React, { useEffect, useState } from 'react';
 
-import Leaderboard from '../components/leaderboard';
-import Layout from '../components/layout';
-import SEO from '../components/seo';
 import InfoModal from '../components/info-modal';
+import Layout from '../components/layout';
+import Leaderboard from '../components/leaderboard';
+import SEO from '../components/seo';
 
 const IndexPage = () => {
   const [isFormShown, toggleForm] = useState(false);
   const [currentQ, setQ] = useState(1);
   const [answers, setAnswers] = useState({});
-  useEffect(
-    () => {
-      console.log(answers);
-    },
-    [Object.keys(answers).length]
-  );
+  useEffect(() => {
+    console.log(answers);
+  }, [Object.keys(answers).length]);
   return (
     <Layout>
       <SEO />
@@ -52,8 +49,10 @@ const IndexPage = () => {
                       </a>
 
                       <span className="submission-text">
-                        <span>Free for makers.</span>
-                        <span>All submissions are manually verified.</span>
+                        <span className="block">Always free for makers.</span>
+                        <span className="block">
+                          All submissions are manually verified.
+                        </span>
                       </span>
                     </div>
                     <div className="hero-browser">
@@ -132,6 +131,10 @@ const IndexPage = () => {
                           </g>
                         </svg>
                       </div>
+                      <div className="others">
+                        Join <span className="text-important">60</span> other
+                        makers publishing ads like these...
+                      </div>
                       <div className="makerverts">
                         <div className="makerad-box">
                           <iframe
@@ -158,8 +161,8 @@ const IndexPage = () => {
                           />
                         </div>
                       </div>
-                      <div className="refresh-text">
-                        Refresh to see more ads!
+                      <div className="refresh-text others">
+                        Refresh to see more!
                       </div>
 
                       <div className="bubble-1 is-revealing">

@@ -126,7 +126,8 @@ export async function getRandom({ referrer } = {}) {
       if (referrer) {
         query = {
           ...query,
-          url: { $not: new RegExp(referrer) }
+          url: { $not: new RegExp(referrer) },
+          deleted: { $ne: true }
         };
       }
 
@@ -217,8 +218,8 @@ export async function getAds() {
   try {
     const ads = await connection.collection('ads');
     return ads
-      .find({})
-      .project({ image: 1, url: 1, clicks: 1, impressions: 1, sponsored: 1 })
+      .find({ deleted: { $ne: true } })
+      .project({ _id: 1, url: 1, clicks: 1, impressions: 1, sponsored: 1 })
       .toArray();
   } catch (err) {
     console.error(err);
@@ -231,7 +232,8 @@ export async function getSponsoredAds() {
     const ads = await connection.collection('ads');
     const sponsors = await ads
       .find({
-        sponsored: true
+        sponsored: true,
+        deleted: { $ne: true }
       })
       .toArray();
     return sponsors;
@@ -279,10 +281,12 @@ async function getTotals() {
 export async function organiseSponsors() {
   const ads = await connection.collection('ads');
   const sponsorCount = await ads.countDocuments({
-    sponsored: true
+    sponsored: true,
+    deleted: { $ne: true }
   });
   const adCount = await ads.countDocuments({
-    sponsored: { $ne: true }
+    sponsored: { $ne: true },
+    deleted: { $ne: true }
   });
   const counterCol = await connection.collection('counter');
   const { showSponsorEvery } = await counterCol.findOne({});
@@ -368,7 +372,10 @@ export async function getStats() {
 export async function getStatsForAdWithId(id) {
   try {
     const col = await connection.collection('ads');
-    const ad = await col.findOne({ _id: new ObjectID(id) });
+    const ad = await col.findOne({
+      _id: new ObjectID(id),
+      deleted: { $ne: true }
+    });
     return ad;
   } catch (err) {
     console.log(err);
@@ -379,7 +386,10 @@ export async function getStatsForAdWithId(id) {
 export async function getStatsForAdWithUrl(url) {
   try {
     const col = await connection.collection('ads');
-    const ad = await col.findOne({ url: { $regex: new RegExp(`${url}$`) } });
+    const ad = await col.findOne({
+      url: { $regex: new RegExp(`${url}$`) },
+      deleted: { $ne: true }
+    });
     return ad;
   } catch (err) {
     console.log(err);
@@ -402,7 +412,7 @@ export async function endSponsorships() {
   console.log('checking sponsors');
   const adsCol = await connection.collection('ads');
   await adsCol.updateMany(
-    { sponsoredEnds: { $gt: new Date() } },
+    { sponsored: true, sponsoredEnds: { $gt: new Date() } },
     { $set: { sponsored: false } },
     { multi: true }
   );
@@ -416,7 +426,8 @@ export async function recordDayStats() {
     const refsCol = await connection.collection('referrers');
     const statsCol = await connection.collection('counter');
     const sponsorCount = await adsCol.countDocuments({
-      sponsored: true
+      sponsored: true,
+      deleted: { $ne: true }
     });
     // FIXME, get this from sponsored ad post
     // cost = count * $25 per ad as pence / 30 days the sponsored ads run * 0.9
@@ -426,7 +437,10 @@ export async function recordDayStats() {
     let totalImpressionsToday = 0;
     // update ads history object with todays stats
     const ads = await adsCol
-      .find({}, { _id: 1, impressionsToday: 1, clicksToday: 1 })
+      .find(
+        { deleted: { $ne: true } },
+        { _id: 1, impressionsToday: 1, clicksToday: 1 }
+      )
       .toArray();
 
     await Promise.all(

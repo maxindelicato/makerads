@@ -1,6 +1,7 @@
+import 'isomorphic-fetch';
+
 import React from 'react';
 import { useAsync } from 'react-use';
-import 'isomorphic-fetch';
 
 function fetchLeaderboard() {
   return fetch('/api/referrers')
@@ -39,6 +40,9 @@ export default () => {
       <p>
         All of our referrers take part in our revenue share system, through
         which we distribute 90% of our earnings from sponsored ads.
+      </p>
+      <p>
+        Check out more stats <a href="/stats">here</a>
       </p>
     </div>
   );
