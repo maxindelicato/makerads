@@ -1,9 +1,12 @@
 import { Logger, MongoClient, ObjectID } from 'mongodb';
 
+import _times from 'lodash.times';
 import config from 'getconfig';
 import counter from 'sliding-window-counter';
 import cron from 'node-cron';
 import isSameDay from 'date-fns/is_same_day';
+import startOfDay from 'date-fns/start_of_day';
+import subDays from 'date-fns/sub_days';
 
 const impressionsCount = counter(1000 * 60);
 const clicksCount = counter(1000 * 60);
@@ -305,6 +308,12 @@ export async function getStats() {
   const counterCol = await connection.collection('counter');
   const sponsoredAds = await getSponsoredAds();
   const ads = await getAds();
+  const now = startOfDay(Date.now());
+  // const blankHistory = _times(30).map(n => ({
+  //   timestamp: subDays(now, 30 - n),
+  //   clicks: 0,
+  //   impressions: 0
+  // }));
   const {
     totalSponsoredClicks,
     totalSponsoredImpressions,
@@ -312,22 +321,13 @@ export async function getStats() {
   } = sponsoredAds.reduce(
     (out, ad) => {
       const { history } = ad;
-      const sponsoredHistory = history.map(h => {
-        const ehi = out.sponsoredHistory.find(({ timestamp }) => {
-          return isSameDay(timestamp, h.timestamp);
-        });
-        return {
-          ...h,
-          clicks: h.clicks + (ehi ? ehi.clicks : 0),
-          impressions: h.impressions + (ehi ? ehi.impressions : 0)
-        };
-      });
-
+      // last 30 days
+      const adHistory = getLast30DaysHistory(ad);
+      const { clicks, impressions } = sumStats(adHistory);
       return {
-        totalSponsoredClicks: ad.clicks + out.totalSponsoredClicks,
-        totalSponsoredImpressions:
-          ad.impressions + out.totalSponsoredImpressions,
-        sponsoredHistory
+        totalSponsoredClicks: clicks + out.totalSponsoredClicks,
+        totalSponsoredImpressions: impressions + out.totalSponsoredImpressions,
+        sponsoredHistory: mergeHistory(adHistory, out.sponsoredHistory)
       };
     },
     {
@@ -352,7 +352,15 @@ export async function getStats() {
     adQuantity,
     totalSponsoredClicks,
     totalSponsoredImpressions,
-    sponsoredHistory,
+    sponsoredHistory: sponsoredHistory.map(sh => {
+      const { sponsoredAds } = history.find(h =>
+        isSameDay(sh.timestamp, h.timestamp)
+      );
+      return {
+        ...sh,
+        sponsoredAds
+      };
+    }),
     ads
   };
 }
@@ -512,4 +520,50 @@ export async function recordStats() {
     await recordDayStats();
     await endSponsorships();
   });
+}
+
+function getLast30DaysHistory(ad) {
+  const { history } = ad;
+  const now = Date.now();
+  const sponsoredHistory = _times(30).reduce((outputHistory, n) => {
+    const date = subDays(now, 30 - n);
+    const statsForDate = history.find(({ timestamp }) => {
+      return isSameDay(timestamp, date);
+    });
+    const hasStatsForDate = !!statsForDate;
+    if (hasStatsForDate) {
+      return [...outputHistory, statsForDate];
+    }
+    return outputHistory;
+  }, []);
+  return sponsoredHistory.sort((a, b) => b.timestamp - a.timestamp);
+}
+
+function mergeHistory(a, b) {
+  const [target, source] = a.length > b.length ? [a, b] : [b, a];
+  return target.map(t => {
+    const statsForDate = source.find(({ timestamp }) => {
+      return isSameDay(timestamp, t.timestamp);
+    });
+    if (statsForDate) {
+      return {
+        clicks: t.clicks + statsForDate.clicks,
+        impressions: t.impressions + statsForDate.impressions,
+        timestamp: t.timestamp
+      };
+    }
+    return t;
+  });
+}
+
+function sumStats(history) {
+  return history.reduce(
+    (out, h) => {
+      return {
+        clicks: out.clicks + h.clicks,
+        impressions: out.impressions + h.impressions
+      };
+    },
+    { clicks: 0, impressions: 0 }
+  );
 }

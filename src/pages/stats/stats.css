@@ -201,3 +201,9 @@
   max-width: 700px;
   margin: 0 auto;
 }
+
+.period-text {
+  display: block;
+  font-size: 12px;
+  opacity: 0.5;
+}

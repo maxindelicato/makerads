@@ -167,13 +167,6 @@ function Content({ ad, loading }) {
   }
   const chartRef = useRef(null);
   const { history } = ad;
-
-  useEffect(() => {
-    if (chartRef.current) {
-      chart(chartRef.current.getContext('2d'), ad.history);
-    }
-  }, [ad, chartRef]);
-
   const today = new Date();
   const thisMonthStart = startOfMonth(today);
   const { monthlyClicks, monthlyImpressions } = history.reduce(
@@ -189,7 +182,14 @@ function Content({ ad, loading }) {
     { monthlyClicks: 0, monthlyImpressions: 0 }
   );
 
-  const ctr = (monthlyClicks / monthlyImpressions) * 100;
+  useEffect(() => {
+    if (chartRef.current && monthlyImpressions > 0) {
+      chart(chartRef.current.getContext('2d'), ad.history);
+    }
+  }, [ad, chartRef]);
+
+  const ctr =
+    monthlyClicks > 0 ? (monthlyClicks / monthlyImpressions) * 100 : 0;
   return (
     <div className="stats-content">
       <img
@@ -201,32 +201,39 @@ function Content({ ad, loading }) {
         <h3 className="stats-url">
           <a href={`${ad.url}?ref=makerads`}>{ad.url}</a>
         </h3>
-        <div className="chart-container">
-          <h4 className="chart-title">
-            <span
-              style={{ color: '#d5d5d6', textShadow: '1px 1px 1px #0000004a' }}
-            >
-              Impressions
-            </span>{' '}
-            vs{' '}
-            <span
-              style={{
-                color: 'rgb(52, 129, 226)',
-                textShadow: '1px 1px 1px rgb(143, 174, 213)'
-              }}
-            >
-              Clicks
-            </span>
-          </h4>
-          <div className="chart">
-            <canvas ref={chartRef} />
-          </div>
+        <div className="chart">
+          {!monthlyImpressions ? (
+            <div className="stats-loading">
+              No data yet, come back again soon!
+            </div>
+          ) : (
+            <div className="chart-container">
+              <h4 className="chart-title">
+                <span
+                  style={{
+                    color: '#d5d5d6',
+                    textShadow: '1px 1px 1px #0000004a'
+                  }}
+                >
+                  Impressions
+                </span>{' '}
+                vs{' '}
+                <span
+                  style={{
+                    color: 'rgb(52, 129, 226)',
+                    textShadow: '1px 1px 1px rgb(143, 174, 213)'
+                  }}
+                >
+                  Clicks
+                </span>
+              </h4>
+
+              <canvas ref={chartRef} />
+            </div>
+          )}
         </div>
+
         <div className="stats-metrics">
-          {/* <div className="metric">
-            <span className="metric-label">Monthly Ranking</span>
-            <span className="metric-figure">#1</span>
-          </div> */}
           <div className="metric">
             <span className="metric-label">Monthly CTR</span>
             <span className="metric-figure">{`${ctr.toFixed(2)}%`}</span>

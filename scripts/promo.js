@@ -1,9 +1,9 @@
 var config = require('getconfig');
-var stripe = require('stripe')(config.stripeKey);
+var stripe = require('stripe')(process.env.STRIPE_KEY);
 
 async function doIt() {
   const { id } = await createCustomer({
-    email: 'leon@slk.media',
+    email: 'ben.tossell@gmail.com',
     currency: 'usd'
   });
   const payment = await createPayment({ customerId: id, productPrice: 2500 });
@@ -26,7 +26,7 @@ export async function createCustomer({ email }) {
 
 export async function createPayment({
   productPrice,
-  quantity = 1,
+  quantity = 3,
   customerId
 }) {
   try {
@@ -36,7 +36,14 @@ export async function createPayment({
       quantity,
       unit_amount: productPrice,
       currency: 'usd',
-      description: '1 month Promoted Ad'
+      description: 'MakerPad 1 month Promoted Ad'
+    });
+    await stripe.invoiceItems.create({
+      customer: customerId,
+      quantity,
+      unit_amount: productPrice,
+      currency: 'usd',
+      description: 'Earnest Capital 1 month Promoted Ad'
     });
     // invoice line item will automatically be
     // applied to this invoice

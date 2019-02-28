@@ -157,6 +157,7 @@ const insert = async fields => {
     const col = await db().collection('ads');
     await col.insertOne({
       ...data,
+      history: [],
       createdAt: isoDate(),
       lastUpdatedAt: isoDate()
     });
@@ -233,5 +234,5 @@ const fetchImage = async uri => {
 // even if has been inserted before.
 // used to reset the local database to match the airtable
 export default async function fetchRecords({ reset } = {}) {
-  return sync({ reset: true });
+  return sync({ reset });
 }

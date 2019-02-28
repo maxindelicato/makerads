@@ -8,6 +8,7 @@ import InfoModal from '../../components/info-modal';
 import Layout from '../../components/layout';
 import Leaderboard from '../../components/leaderboard';
 import SEO from '../../components/seo';
+import format from 'date-fns/format';
 import isAfter from 'date-fns/is_after';
 import numeral from 'numeral';
 import startOfDay from 'date-fns/start_of_day';
@@ -209,6 +210,10 @@ function Content({ stats, loading }) {
 
   const today = new Date();
   const thisPeriod = subDays(today, 30);
+  const displayPeriod = `${format(thisPeriod, 'Do MMM')} - ${format(
+    today,
+    'Do MMM'
+  )}`;
   const { monthlyClicks, monthlyImpressions } = history.reduce(
     (out, day) => {
       if (isAfter(new Date(day.timestamp), thisPeriod)) {
@@ -228,6 +233,18 @@ function Content({ stats, loading }) {
     totalSponsoredClicks > 0
       ? (totalSponsoredClicks / totalSponsoredImpressions) * 100
       : 0;
+
+  const sponsoredAvgImpressions = sponsoredHistory.map(sh => {
+    return sh.impressions / sh.sponsoredAds;
+  });
+  const sponsoredAvgImpression = sponsoredAvgImpressions.reduce(
+    (sum, i) => i + sum
+  );
+  const sponsoredAvgClicks = sponsoredHistory.map(sh => {
+    return sh.clicks / sh.sponsoredAds;
+  });
+  const sponsoredAvgClick = sponsoredAvgClicks.reduce((sum, i) => i + sum);
+
   return (
     <div className="stats-content" style={{ padding: '180px 0 0 0' }}>
       <div className="stats-stats">
@@ -252,6 +269,7 @@ function Content({ stats, loading }) {
               >
                 Clicks
               </span>
+              <span className="period-text">{displayPeriod}</span>
             </h4>
             <div className="chart">
               <canvas ref={chartRef} />
@@ -311,6 +329,7 @@ function Content({ stats, loading }) {
               >
                 Clicks
               </span>
+              <span className="period-text">{displayPeriod}</span>
             </h4>
             <div className="chart">
               <canvas ref={sponsoredChartRef} />
@@ -341,13 +360,13 @@ function Content({ stats, loading }) {
             <div className="metric">
               <span className="metric-label">Avg. Impressions/Ad</span>
               <span className="metric-figure">
-                {formatNumber(totalSponsoredImpressions / sponsorQuantity)}
+                {formatNumber(sponsoredAvgImpression)}
               </span>
             </div>
             <div className="metric">
               <span className="metric-label">Avg. Clicks/Ad</span>
               <span className="metric-figure">
-                {formatNumber(totalSponsoredClicks / sponsorQuantity)}
+                {formatNumber(sponsoredAvgClick)}
               </span>
             </div>
             {/* <div className="metric">

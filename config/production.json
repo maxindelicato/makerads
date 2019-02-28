@@ -1,7 +1,7 @@
 {
   "db": {
-    "user": "$DB_USER",
-    "password": "$DB_PASSWORD",
+    "user": "$$DB_USER",
+    "password": "$$DB_PASSWORD",
     "host": "db.leavemealone.xyz",
     "port": 27017,
     "name": "makerads"
