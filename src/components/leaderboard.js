@@ -14,7 +14,7 @@ export default () => {
   return (
     <div className="leaderboard" id="leaderboard">
       <h2>Top Referrers</h2>
-      <p>Get referrals from the biggest names in the community.</p>
+      {/* <p>Get referrals from the biggest names in the community.</p> */}
       {value ? (
         <table className="leaderboard-list">
           <thead>
@@ -37,10 +37,6 @@ export default () => {
           </tbody>
         </table>
       ) : null}
-      <p>
-        All of our referrers take part in our revenue share system, through
-        which we distribute 90% of our earnings from sponsored ads.
-      </p>
       <p>
         Check out more stats <a href="/stats">here</a>
       </p>

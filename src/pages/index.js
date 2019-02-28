@@ -45,11 +45,11 @@ const IndexPage = () => {
                         className="create-btn button button-primary button-block button-shadow"
                         href="https://airtable.com/shrX05grZpNBQTzuO"
                       >
-                        Submit your product
+                        Submit your product for free
                       </a>
 
                       <span className="submission-text">
-                        <span className="block">Always free for makers.</span>
+                        <span>100% free for makers!</span>
                         <span className="block">
                           All submissions are manually verified.
                         </span>
@@ -132,7 +132,7 @@ const IndexPage = () => {
                         </svg>
                       </div>
                       <div className="others">
-                        Join <span className="text-important">60</span> other
+                        Join <span className="text-important">70+</span> other
                         makers publishing ads like these...
                       </div>
                       <div className="makerverts">
@@ -242,13 +242,43 @@ const IndexPage = () => {
                 </div>
               </section>
 
-              <Leaderboard />
+              <section className="newsletter section market" id="embed">
+                <div className="container-sm">
+                  <div className="newsletter-inner section-inner">
+                    <div className="newsletter-header text-center is-revealing">
+                      <h2 className="section-title mt-0">
+                        Market your product to more than 50 thousand developers,
+                        designers, and freelancers
+                      </h2>
+                      <p className="section-paragraph">
+                        As well as maker submissions, we also offer a limited
+                        number of sponsored ad spots to great products looking
+                        to reach developers and creatives.
+                      </p>
+                      <p className="section-paragraph">
+                        Sponsored ads show up more frequently on the network,
+                        and reach more users. See our{' '}
+                        <a href="/stats">stats page</a> for more details or get
+                        in touch.
+                      </p>
+                      <div className="contact-us-container">
+                        <a
+                          className="create-btn button button-primary button-block button-shadow"
+                          href="https://airtable.com/shrX05grZpNBQTzuO"
+                        >
+                          Contact Us
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
               <section className="newsletter section support" id="embed">
                 <div className="container-sm">
                   <div className="newsletter-inner section-inner">
                     <div className="newsletter-header text-center is-revealing">
                       <h2 className="section-title mt-0">
-                        Support the maker movement, become a referrer!
+                        Support the maker movement, become a paid referrer!
                       </h2>
                       <p className="section-paragraph">
                         Embed the following script on your website, and a random
@@ -260,40 +290,16 @@ const IndexPage = () => {
   src="${url}"
 ></iframe>`}
                       </pre>
-                      <p className="section-paragraph">
-                        You will also be able to take part in our revenue share
-                        system, based on the number of referrals that you
-                        provide.
+                      <p>
+                        All of our referrers take part in our revenue share
+                        system, through which we distribute 90% of our earnings
+                        from sponsored ads.
                       </p>
                     </div>
                   </div>
                 </div>
               </section>
-
-              <section className="newsletter section market" id="embed">
-                <div className="container-sm">
-                  <div className="newsletter-inner section-inner">
-                    <div className="newsletter-header text-center is-revealing">
-                      <h2 className="section-title mt-0">
-                        Market your product to thousands of developers,
-                        designers, and freelancers
-                      </h2>
-                      <p className="section-paragraph">
-                        We offer sponsored ad spots to products looking to
-                        specifically target the maker community.
-                      </p>
-                      <div className="contact-us-container">
-                        <a
-                          className="create-btn button button-primary button-block button-shadow"
-                          href="https://airtable.com/shrTNgZVRwEukgkU3"
-                        >
-                          Contact Us
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
+              <Leaderboard />
               <section>
                 <div className="container-sm faq">
                   <div className="newsletter-inner section-inner">
