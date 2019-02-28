@@ -8,5 +8,8 @@
   "airtable": {
     "apiKey": "$AIRTABLE_API_KEY",
     "base": "$AIRTABLE_BASE_ID"
+  },
+  "payments": {
+    "secretKey": "$STRIPE_SECRET_KEY"
   }
 }

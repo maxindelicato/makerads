@@ -8,6 +8,7 @@ import http from 'http';
 import httpProxy from 'http-proxy';
 import io from '@pm2/io';
 import path from 'path';
+import paymentsApi from './rest/payments';
 import referrersApi from './rest/referrers';
 import statsApi from './rest/stats';
 import url from 'url';
@@ -19,7 +20,7 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use('/api', referrersApi, statsApi);
+app.use('/api', referrersApi, statsApi, paymentsApi);
 
 adsApi(app);
 
