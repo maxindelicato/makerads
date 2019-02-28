@@ -122,15 +122,23 @@ pre {
 .newsletter-form {
   flex-direction: column;
 }
+
 .submission-text {
   display: block;
   font-size: 65%;
   opacity: 0.55;
   margin-top: 10px;
   line-height: 18px;
-  span {
+  .block {
     display: block;
   }
+}
+
+.others {
+  font-size: 85%;
+  opacity: 0.55;
+  line-height: 18px;
+  margin: 20px auto;
 }
 
 pre {

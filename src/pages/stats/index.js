@@ -136,7 +136,7 @@ export default route => {
 
   return (
     <Layout footer={false} title="Ad Stats">
-      <SEO />
+      {/* <SEO /> */}
       <main>
         <div className="stats">
           <div className="stats-header">
@@ -416,7 +416,8 @@ const AdList = ({ ads }) => {
             <Link to={`/stats/ads/?id=${ad._id}`}>
               <img
                 className="ad-image"
-                src={`data:image/png;base64,${ad.image}`}
+                src={`/${ad._id}/image?bypass=true`}
+                // src={`data:image/png;base64,${ad.image}`}
                 alt="ad"
               />
               <div className="ad-info">

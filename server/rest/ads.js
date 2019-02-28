@@ -22,7 +22,7 @@ export default app => {
         const referrerUrl = url.parse(referrer);
         a = await ad({ referrer: referrerUrl.host });
       } else {
-        a = await ad();
+        a = await ad({ bypass });
       }
     } catch (err) {
       console.error('failed to get ad');
@@ -47,11 +47,11 @@ export default app => {
 
   app.get('/:id/redirect', fraudDetector, async (req, res) => {
     const adId = req.params.id;
-    const { ref: referrer } = req.query;
+    const { ref: referrer, bypass } = req.query;
     const { ignoreClick } = res.locals;
     try {
       const { url } = await getAd(adId);
-      if (!ignoreClick) {
+      if (!ignoreClick || bypass) {
         trackClick(adId, referrer);
       }
       return res.redirect(`${url}?ref=${referrer}`);
@@ -62,12 +62,10 @@ export default app => {
   });
 
   app.get('/:id/image', async (req, res) => {
-    console.log('/image');
     try {
       const adId = req.params.id;
       const acceptsWebp = req.accepts('image/webp');
-
-      const { ref: referrer } = req.query;
+      const { ref: referrer, bypass } = req.query;
       const cachedResponse = await getFromCache(
         req.path,
         acceptsWebp ? 'webp' : 'png'
@@ -77,9 +75,8 @@ export default app => {
 
       if (cachedResponse) {
         console.log('serving cached');
-        imageData = cachedResponse;
-        img = new Buffer(imageData, 'base64');
-
+        img = imageData = cachedResponse;
+        // img = new Buffer(imageData, 'binary');
         res.writeHead(200, {
           'Content-Type': acceptsWebp ? 'image/webp' : 'image/png',
           'Content-Length': img.length
@@ -88,18 +85,19 @@ export default app => {
         console.log('serving uncached');
         const { image } = await getAd(adId);
         imageData = image;
-        addToCache(req.path, imageData).catch(err => {
-          console.error(`failed to cache ad image with id ${adId}`);
-          console.error(err.message);
-        });
+        // addToCache(req.path, imageData).catch(err => {
+        //   console.error(`failed to cache ad image with id ${adId}`);
+        //   console.error(err.message);
+        // });
         img = new Buffer(imageData, 'base64');
         res.writeHead(200, {
           'Content-Type': 'image/png',
           'Content-Length': img.length
         });
       }
-
-      trackImpression(adId, referrer);
+      if (!bypass) {
+        trackImpression(adId, referrer);
+      }
       return res.end(img);
     } catch (err) {
       console.error(err);
@@ -143,7 +141,7 @@ function addToCache(key, img) {
         const compressedImg = fs.readFileSync(`output-${name}.webp`);
         const { size: newSize } = fs.statSync(`output-${name}.webp`);
         fs.unlinkSync(`output-${name}.webp`);
-        fs.unlink(`${name}.png`);
+        fs.unlinkSync(`${name}.png`);
 
         console.log(
           `saved ${100 - (newSize / originalSize) * 100}% of image size`

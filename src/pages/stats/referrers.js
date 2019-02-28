@@ -87,7 +87,7 @@ function Content({ referrers, loading }) {
                   .map(r => {
                     return {
                       ...r,
-                      earnings: r.history
+                      earnings: (r.history || [])
                         .map(d => (isNaN(d.earnings) ? 0 : d.earnings))
                         .reduce((t, d) => d + t, 0)
                     };
