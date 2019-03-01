@@ -1,11 +1,18 @@
-import React from 'react';
-import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
 
-import metaImage from '../images/meta-image.png';
+import Helmet from 'react-helmet';
+import React from 'react';
+import defaultImage from '../images/meta-image.png';
 import favicon from '../images/favicon.png';
 
-function SEO({ description, lang = 'en', meta = [], keywords = [], title }) {
+function SEO({
+  description,
+  lang = 'en',
+  meta = [],
+  keywords = [],
+  title,
+  image
+}) {
   return (
     <StaticQuery
       query={detailsQuery}
@@ -16,6 +23,7 @@ function SEO({ description, lang = 'en', meta = [], keywords = [], title }) {
         const metaDescription =
           description || data.site.siteMetadata.description;
         const { author, baseUrl, siteName } = data.site.siteMetadata;
+        const metaImage = defaultImage || image;
         return (
           <Helmet>
             <meta charSet="utf-8" />

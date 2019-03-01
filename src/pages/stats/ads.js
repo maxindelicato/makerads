@@ -134,7 +134,7 @@ export default route => {
 
   return (
     <Layout footer={false} title="Ad Stats">
-      <SEO />
+      <SEO image={`${id}/image?bypass=true`} />
       <main>
         <div className="stats">
           <div className="stats-header">
