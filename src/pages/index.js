@@ -310,7 +310,7 @@ const IndexPage = () => {
                         Any indie maker can publish an ad to the network{' '}
                         <strong>for free</strong>. If you are submitting your
                         own design then try to keep it simple and unobtrusive,
-                        gifs are allowed, within reason.{' '}
+                        gifs are not allowed.{' '}
                         <a href="https://twitter.com/realmakerads">
                           Contact us
                         </a>{' '}
@@ -321,16 +321,15 @@ const IndexPage = () => {
                         We only accept ads from larger companies in the form of
                         sponsored spots. This allows your ad to be shown more
                         freqently for a set period of time.{' '}
-                        <a href="https://airtable.com/shrTNgZVRwEukgkU3">
-                          Contact us
-                        </a>{' '}
+                        <a href="mailto:makerads@squarecat.io">Contact us</a>{' '}
                         for more information.
                       </p>
                       <p className="section-paragraph" />
                       <h3>What type of companies do you work with?</h3>
                       <p className="section-paragraph">
                         We want to work with great companies that are interested
-                        in supporting the maker community.
+                        in supporting the maker community and reaching like
+                        minded folks.
                       </p>
                       <h3>How does the revenue sharing program work?</h3>
                       <p>
@@ -342,9 +341,9 @@ const IndexPage = () => {
                       <h3>Do you have an "ethical advertising" policy?</h3>
                       <p className="section-paragraph">
                         Of course. We host all ad images, and don't use any
-                        third party tracking scripts. We don't track you or sell
-                        your information. All our stats are public, and even our
-                        ad code is{' '}
+                        third party tracking scripts. We don't track you in any
+                        way or sell any information. All our stats are public,
+                        and even our ad code is{' '}
                         <a href="https://github.com/squarecat/makerads">
                           open source
                         </a>

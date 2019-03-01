@@ -35,7 +35,7 @@
     "build": "babel -d ./build ./server",
     "dev": "NODE_ENV=development node --inspect index.js",
     "seed": "NODE_ENV=development babel-node ./scripts/seed.js",
-    "client:build": "gatsby build",
+    "client:build": "NODE_ENV=production gatsby build",
     "client:dev": "gatsby develop",
     "client:start": "npm run develop",
     "promo": "babel-node scripts/promo.js"

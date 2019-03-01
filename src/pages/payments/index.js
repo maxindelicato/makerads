@@ -3,6 +3,7 @@ import './payments.css';
 import React, { useEffect, useState } from 'react';
 
 import Layout from '../../components/layout';
+import SEO from '../../components/seo';
 import logo from '../../images/logo.png';
 
 const PAYMENT_CONFIG_OPTS = {
@@ -74,6 +75,7 @@ const PaymentForm = () => {
 
   return (
     <Layout footer={false} title="Ad Design Payments">
+      <SEO />
       <main>
         <div className="payments">
           <div className="payments-header">

@@ -11,6 +11,7 @@ import SEO from '../../components/seo';
 import isAfter from 'date-fns/is_after';
 import startOfDay from 'date-fns/start_of_day';
 import startOfMonth from 'date-fns/start_of_month';
+import subDays from 'date-fns/sub_days';
 import { useAsync } from 'react-use';
 
 const fetchStatsForAd = id => {
@@ -168,10 +169,10 @@ function Content({ ad, loading }) {
   const chartRef = useRef(null);
   const { history } = ad;
   const today = new Date();
-  const thisMonthStart = startOfMonth(today);
+  const thisPeriod = subDays(today, 30);
   const { monthlyClicks, monthlyImpressions } = history.reduce(
     (out, day) => {
-      if (isAfter(new Date(day.timestamp), thisMonthStart)) {
+      if (isAfter(new Date(day.timestamp), thisPeriod)) {
         return {
           monthlyClicks: out.monthlyClicks + day.clicks,
           monthlyImpressions: out.monthlyImpressions + day.impressions

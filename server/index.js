@@ -82,9 +82,4 @@ if (process.env.NODE_ENV !== 'development') {
   });
 }
 
-// (async () => {
-//   const fetchRecords = require('./records').default;
-//   await fetchRecords({ reset: true });
-// })();
-
 export default App;

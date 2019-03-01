@@ -1,12 +1,12 @@
 var config = require('getconfig');
-var stripe = require('stripe')(process.env.STRIPE_KEY);
+var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 async function doIt() {
   const { id } = await createCustomer({
-    email: 'ben.tossell@gmail.com',
+    email: '',
     currency: 'usd'
   });
-  const payment = await createPayment({ customerId: id, productPrice: 2500 });
+  const payment = await createPayment({ customerId: id, productPrice: 5000 });
 }
 
 export async function createCustomer({ email }) {
@@ -36,14 +36,7 @@ export async function createPayment({
       quantity,
       unit_amount: productPrice,
       currency: 'usd',
-      description: 'MakerPad 1 month Promoted Ad'
-    });
-    await stripe.invoiceItems.create({
-      customer: customerId,
-      quantity,
-      unit_amount: productPrice,
-      currency: 'usd',
-      description: 'Earnest Capital 1 month Promoted Ad'
+      description: '1 month Promoted Ad'
     });
     // invoice line item will automatically be
     // applied to this invoice

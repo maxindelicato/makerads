@@ -150,10 +150,10 @@ function Content({ referrer, loading }) {
   }, [referrer, chartRef]);
 
   const today = new Date();
-  const thisMonthStart = startOfMonth(today);
+  const thisPeriod = subDays(today, 30);
   const { monthlyClicks, monthlyImpressions, monthlyEarnings } = history.reduce(
     (out, day) => {
-      if (isAfter(new Date(day.timestamp), thisMonthStart)) {
+      if (isAfter(new Date(day.timestamp), thisPeriod)) {
         return {
           monthlyClicks: out.monthlyClicks + day.clicks,
           monthlyImpressions: out.monthlyImpressions + day.impressions,
