@@ -23,7 +23,7 @@ function SEO({
         const metaDescription =
           description || data.site.siteMetadata.description;
         const { author, baseUrl, siteName } = data.site.siteMetadata;
-        const metaImage = defaultImage || image;
+        const metaImage = image || defaultImage;
         return (
           <Helmet>
             <meta charSet="utf-8" />
