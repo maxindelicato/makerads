@@ -11,6 +11,7 @@ import SEO from '../../components/seo';
 import isAfter from 'date-fns/is_after';
 import startOfDay from 'date-fns/start_of_day';
 import startOfMonth from 'date-fns/start_of_month';
+import subDays from 'date-fns/sub_days';
 import { useAsync } from 'react-use';
 
 const fetchStatsForReferrer = id => {
