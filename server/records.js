@@ -135,7 +135,8 @@ const insert = async fields => {
     Label,
     Paid,
     Sponsored,
-    Expires
+    Expires,
+    Text
   } = fields;
   if (!Name) return null;
   // fetch image
@@ -151,6 +152,7 @@ const insert = async fields => {
     paidAt: Paid,
     sponsoredEnds: Expires,
     clicksToday: 0,
+    text: Text,
     impressionsToday: 0
   };
   try {
@@ -179,7 +181,8 @@ const update = async fields => {
     Label,
     Paid,
     Sponsored,
-    Expires
+    Expires,
+    Text
   } = fields;
   console.log(`inserting ${URL}`);
   if (!Name) return null;
@@ -194,7 +197,8 @@ const update = async fields => {
     labelPosition: Label,
     sponsored: Sponsored,
     paidAt: Paid,
-    sponsoredEnds: Expires
+    sponsoredEnds: Expires,
+    text: Text
   };
   try {
     const col = await db().collection('ads');
