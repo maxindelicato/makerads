@@ -5,6 +5,7 @@ export async function jsonAd({ referrer } = {}) {
   const ad = await getAd(null, { referrer });
   let jsonData = {
     id: ad._id,
+    text: ad.text,
     impressions: ad.impressions || 0,
     clicks: ad.clicks || 0,
     image: `${config.url}/${ad._id}/image`,

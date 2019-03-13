@@ -22,7 +22,7 @@ export default app => {
         const referrerUrl = url.parse(referrer);
         a = await ad({ referrer: referrerUrl.host });
       } else {
-        a = await ad({ bypass });
+        a = await ad();
       }
     } catch (err) {
       console.error('failed to get ad');
@@ -76,7 +76,6 @@ export default app => {
       if (cachedResponse) {
         console.log('serving cached');
         img = imageData = cachedResponse;
-        // img = new Buffer(imageData, 'binary');
         res.writeHead(200, {
           'Content-Type': acceptsWebp ? 'image/webp' : 'image/png',
           'Content-Length': img.length
