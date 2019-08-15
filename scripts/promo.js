@@ -3,10 +3,13 @@ var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 async function doIt() {
   const { id } = await createCustomer({
-    email: '',
+    email: process.env.USER_EMAIL,
     currency: 'usd'
   });
-  const payment = await createPayment({ customerId: id, productPrice: 5000 });
+  const payment = await createPayment({
+    customerId: id,
+    productPrice: process.env.PRICE_USD * 100
+  });
 }
 
 export async function createCustomer({ email }) {
@@ -26,7 +29,7 @@ export async function createCustomer({ email }) {
 
 export async function createPayment({
   productPrice,
-  quantity = 3,
+  quantity = 1,
   customerId
 }) {
   try {

@@ -289,13 +289,10 @@ export async function organiseSponsors() {
     deleted: { $ne: true }
   });
   const counterCol = await connection.collection('counter');
-  const { showSponsorEvery } = await counterCol.findOne({});
-  const sponsorMod = showSponsorEvery / sponsorCount;
   return counterCol.updateOne(
     {},
     {
       $set: {
-        sponsorMod,
         sponsorQuantity: sponsorCount,
         adQuantity: adCount
       }

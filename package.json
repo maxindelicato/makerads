@@ -9,6 +9,7 @@
     "agenda": "^2.0.2",
     "airtable": "^0.5.8",
     "chart.js": "^2.7.3",
+    "cors": "^2.8.5",
     "date-fns": "^1.30.1",
     "express": "^4.16.4",
     "express-rate-limit": "^3.4.0",
@@ -29,7 +30,7 @@
     "webp-converter": "^2.2.2"
   },
   "scripts": {
-    "scp": "scp makerads.tar.gz staging:/var/www/makerads",
+    "scp": "scp makerads.tar.gz $MAKERADS_SERVER:/var/www/makerads",
     "tar": "tar cf makerads.tar.gz public build config index.js package.json",
     "deploy": "NODE_ENV=production npm run build && npm run tar && npm run scp",
     "build": "babel -d ./build ./server",
