@@ -2,6 +2,7 @@ import ad, { jsonAd } from '../services/ad-service';
 import db, { getAd } from '../db';
 import { trackClick, trackImpression } from '../utils/tracking';
 
+import cors from 'cors';
 import fraudDetector from '../utils/fraud-detector';
 import fs from 'fs';
 import io from '@pm2/io';
@@ -31,7 +32,7 @@ export default app => {
     return res.send(a);
   });
 
-  app.get('/ad.json', async (req, res) => {
+  app.get('/ad.json', cors(), async (req, res) => {
     console.log('/ad.json');
     const referrer = req.header('Referer');
     let a;

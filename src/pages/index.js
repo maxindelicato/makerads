@@ -132,7 +132,7 @@ const IndexPage = () => {
                         </svg>
                       </div>
                       <div className="others">
-                        Join <span className="text-important">70+</span> other
+                        Join <span className="text-important">100+</span> other
                         makers publishing ads like these...
                       </div>
                       <div className="makerverts">
@@ -247,8 +247,8 @@ const IndexPage = () => {
                   <div className="newsletter-inner section-inner">
                     <div className="newsletter-header text-center is-revealing">
                       <h2 className="section-title mt-0">
-                        Market your product to more than 50 thousand developers,
-                        designers, and freelancers
+                        Market your product to more than 100 thousand
+                        developers, designers, and freelancers monthly
                       </h2>
                       <p className="section-paragraph">
                         As well as maker submissions, we also offer a limited
