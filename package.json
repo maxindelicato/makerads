@@ -7,7 +7,7 @@
     "@babel/polyfill": "^7.2.3",
     "@pm2/io": "^2.4.7",
     "agenda": "^2.0.2",
-    "airtable": "^0.5.8",
+    "airtable": "^0.7.2",
     "chart.js": "^2.7.3",
     "cors": "^2.8.5",
     "date-fns": "^1.30.1",
